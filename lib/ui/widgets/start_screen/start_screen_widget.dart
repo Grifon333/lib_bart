@@ -35,7 +35,7 @@ class _BodyWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 175),
-              MainButton().button1(
+              MainButton().elevatedButton(
                 title: 'Log in',
                 onPressed: () => Navigator.of(context)
                     .pushNamed(MainNavigationNameRoute.login),
@@ -51,10 +51,10 @@ class _BodyWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              MainButton().button1(
+              MainButton().elevatedButton(
                 title: 'Register',
                 onPressed: () => Navigator.of(context)
-                    .pushNamed(MainNavigationNameRoute.register),
+                    .pushNamed(MainNavigationNameRoute.registerFirst),
                 color: MainColors.color3,
               ),
             ],

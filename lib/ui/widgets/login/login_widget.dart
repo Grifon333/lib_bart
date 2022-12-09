@@ -43,7 +43,7 @@ class _BodyWidget extends StatelessWidget {
               const SizedBox(height: 48),
               MainTextField().tf1(hintText: 'Password'),
               const SizedBox(height: 80),
-              MainButton().button1(
+              MainButton().elevatedButton(
                 onPressed: () {},
                 color: MainColors.color4,
                 title: 'Log in',

@@ -5,7 +5,7 @@ class MainTextField {
     required String hintText,
   }) {
     return TextField(
-      style: const TextStyle(fontSize: 32),
+      style: const TextStyle(fontSize: 30),
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
