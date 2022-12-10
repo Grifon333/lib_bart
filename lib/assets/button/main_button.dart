@@ -29,11 +29,12 @@ class MainButton {
 
   Widget textButton({
     required String title,
+    required Function() onPressed,
   }) {
     return SizedBox(
       width: double.infinity,
       child: TextButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Text(
           title,
           style: const TextStyle(
