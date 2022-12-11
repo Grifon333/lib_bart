@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lib_bart/assets/color/main_colors.dart';
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
+import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
+import 'package:lib_bart/ui/widgets/books_list/books_list_widget.dart';
 import 'package:lib_bart/ui/widgets/bottom_navigation/bottom_navigation_model.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
@@ -20,8 +22,15 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final listWidgets = [
+      NotifierProvider(
+        child: const BooksListWidget(),
+        create: () => BooksListModel(),
+      )
+    ];
+
     return SafeArea(
-      child: Text(''),
+      child: listWidgets.first,
     );
   }
 }
