@@ -21,10 +21,19 @@ class _BodyWidget extends StatelessWidget {
       color: MainColors.color1,
       child: SafeArea(
         child: Column(
-          children: const [
-            _UpBarWidget(),
-            SizedBox(height: 15),
-            _SearchAndOptionsWidget(),
+          children: [
+            const _UpBarWidget(),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                children: const [
+                  _SearchAndOptionsWidget(),
+                  SizedBox(height: 30),
+                  _BooksListWidget(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -80,7 +89,6 @@ class _SearchAndOptionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(width: 20),
         SizedBox(
           height: 70,
           width: 70,
@@ -100,41 +108,227 @@ class _SearchAndOptionsWidget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 15),
-        const SizedBox(
+        const SizedBox(width: 10),
+        SizedBox(
           // height: 70,
-          width: 300,
-          child: TextField(
+          width: MediaQuery.of(context).size.width - 130,
+          child: const TextField(
             decoration: InputDecoration(
-              hintText: 'Search...',
-              suffixIcon: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(Icons.search, size: 50, color: Colors.black,),
-              ),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black)),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black)),
-              filled: true,
-              fillColor: Colors.white
-            ),
+                hintText: 'Search...',
+                suffixIcon: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(
+                    Icons.search,
+                    size: 50,
+                    color: Colors.black,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black)),
+                filled: true,
+                fillColor: Colors.white),
             style: TextStyle(fontSize: 24),
           ),
         ),
-        // SizedBox(
-        //   height: 70,
-        //   width: 300,
-        //   child: DecoratedBox(
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       borderRadius: const BorderRadius.all(Radius.circular(6)),
-        //       border: Border.all(color: Colors.black),
-        //     ),
-        //     child: TextField(
-        //
-        //     ),
-        //   ),
-        // )
+      ],
+    );
+  }
+}
+
+class _BooksListWidget extends StatelessWidget {
+  const _BooksListWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 320,
+          width: MediaQuery.of(context).size.width - 50,
+          child: ColoredBox(
+            color: MainColors.color5,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 230,
+                          width: 160,
+                          child: ColoredBox(color: Colors.black),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: 160,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              _ElementOptionsBookWidget(
+                                icon: Icons.circle,
+                                text: 'UA',
+                              ),
+                              _ElementOptionsBookWidget(
+                                icon: Icons.grade,
+                                text: '2021',
+                              ),
+                            ],
+                          ),
+                        ),
+                        // const SizedBox(height: 5),
+                        SizedBox(
+                          width: 160,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              _ElementOptionsBookWidget(
+                                icon: Icons.bookmark,
+                                text: '230',
+                              ),
+                              _ElementOptionsBookWidget(
+                                icon: Icons.book,
+                                text: 'Hard',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Title',
+                          style: TextStyle(
+                            fontSize: 32,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 2,
+                          width: MediaQuery.of(context).size.width - 245,
+                          child: const ColoredBox(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 245,
+                          child: const _StarsWidget(),
+                        ),
+                        const Text(
+                          'Genres:',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        const Text(
+                          'Description',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 98),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(
+                                horizontal: 40,
+                                vertical: 6,
+                              ),
+                            ),
+                            backgroundColor: MaterialStateProperty.all(
+                              MainColors.color4,
+                            ),
+                            side: MaterialStateProperty.all(
+                              BorderSide(color: Colors.black),
+                            ),
+                          ),
+                          child: const Text(
+                            '5.99\$',
+                            style: TextStyle(fontSize: 36),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _ElementOptionsBookWidget extends StatelessWidget {
+  final IconData icon;
+  final String text;
+
+  const _ElementOptionsBookWidget({
+    Key? key,
+    required this.icon,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 30,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+}
+
+class _StarsWidget extends StatelessWidget {
+  const _StarsWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.star_border,
+          color: Colors.amber,
+        ),
       ],
     );
   }
