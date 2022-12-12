@@ -4,6 +4,10 @@ import 'package:lib_bart/library/widgets/inherited/provider.dart';
 import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
 import 'package:lib_bart/ui/widgets/books_list/books_list_widget.dart';
 import 'package:lib_bart/ui/widgets/bottom_navigation/bottom_navigation_model.dart';
+import 'package:lib_bart/ui/widgets/profile/profile_model.dart';
+import 'package:lib_bart/ui/widgets/profile/profile_widget.dart';
+import 'package:lib_bart/ui/widgets/settings/settings_model.dart';
+import 'package:lib_bart/ui/widgets/settings/settings_widget.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
   const BottomNavigationWidget({Key? key}) : super(key: key);
@@ -22,15 +26,26 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<BottomNavigationModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     final listWidgets = [
+      NotifierProvider(
+        child: const ProfileWidget(),
+        create: () => ProfileModel(),
+      ),
       NotifierProvider(
         child: const BooksListWidget(),
         create: () => BooksListModel(),
+      ),
+      NotifierProvider(
+        child: const SettingsWidget(),
+        create: () => SettingsModel(),
       )
     ];
 
     return SafeArea(
-      child: listWidgets.first,
+      child: listWidgets[model.currentPage],
     );
   }
 }

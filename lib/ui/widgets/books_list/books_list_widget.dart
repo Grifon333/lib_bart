@@ -152,7 +152,7 @@ class _BooksListWidget extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
+                  borderRadius: const BorderRadius.all(Radius.circular(8))),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Row(
@@ -252,7 +252,7 @@ class _BooksListWidget extends StatelessWidget {
                               MainColors.color4,
                             ),
                             side: MaterialStateProperty.all(
-                              BorderSide(color: Colors.black),
+                              const BorderSide(color: Colors.black),
                             ),
                           ),
                           child: const Text(
@@ -308,7 +308,7 @@ class _StarsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [
+      children: const [
         Icon(
           Icons.star,
           color: Colors.amber,
