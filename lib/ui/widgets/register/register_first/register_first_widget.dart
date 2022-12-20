@@ -49,7 +49,7 @@ class _BodyWidget extends StatelessWidget {
               MainTextField().tf1(hintText: 'Confirm password'),
               const SizedBox(height: 65),
               MainButton().elevatedButton(
-                onPressed: () => model.toNext(context),
+                onPressed: () async => model.toNext(context),
                 color: MainColors.color4,
                 title: 'Next',
               )
