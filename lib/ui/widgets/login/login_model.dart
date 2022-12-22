@@ -10,10 +10,6 @@ class LoginModel extends ChangeNotifier {
     _login = value;
   }
 
-  // void setLogin(String value) {
-  //   _login = value;
-  // }
-
   set password(String value) {
     _password = value;
   }

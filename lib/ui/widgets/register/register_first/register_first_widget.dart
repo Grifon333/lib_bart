@@ -23,7 +23,7 @@ class _BodyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<RegisterFirstModel>(context);
-    if(model == null) return const SizedBox.shrink();
+    if (model == null) return const SizedBox.shrink();
 
     return ColoredBox(
       color: MainColors.color1,
@@ -40,16 +40,28 @@ class _BodyWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 48),
               ),
               const SizedBox(height: 70),
-              MainTextField().tf1(hintText: 'Login'),
+              MainTextField().tf1(
+                hintText: 'Login',
+                onChange: (value) => model.login = value,
+              ),
               const SizedBox(height: 25),
-              MainTextField().tf1(hintText: 'Email'),
+              MainTextField().tf1(
+                hintText: 'Email',
+                onChange: (value) => model.email = value,
+              ),
               const SizedBox(height: 25),
-              MainTextField().tf1(hintText: 'Password'),
+              MainTextField().tf1(
+                hintText: 'Password',
+                onChange: (value) => model.password = value,
+              ),
               const SizedBox(height: 25),
-              MainTextField().tf1(hintText: 'Confirm password'),
+              MainTextField().tf1(
+                hintText: 'Confirm password',
+                onChange: (value) => model.confirmPassword = value,
+              ),
               const SizedBox(height: 65),
               MainButton().elevatedButton(
-                onPressed: () async => model.toNext(context),
+                onPressed: () async => model.register(context),
                 color: MainColors.color4,
                 title: 'Next',
               )
