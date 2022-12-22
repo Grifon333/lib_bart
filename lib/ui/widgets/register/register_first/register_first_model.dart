@@ -12,7 +12,7 @@ class RegisterFirstModel extends ChangeNotifier {
     UserCredential? credential;
     try {
       credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: 'user5135@gmail.com', password: '524');
+          email: 'user5135@gmail.com', password: 'ergg354t');
       print(credential.user?.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

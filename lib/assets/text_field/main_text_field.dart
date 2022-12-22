@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MainTextField {
   Widget tf1({
     required String hintText,
+    Function(String)? onChange,
   }) {
     return TextField(
       style: const TextStyle(fontSize: 30),
@@ -17,6 +18,7 @@ class MainTextField {
         hintText: hintText,
         hintStyle: const TextStyle(color: Color.fromRGBO(200, 200, 200, 1)),
       ),
+      onChanged: onChange,
     );
   }
 }
