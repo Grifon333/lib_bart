@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lib_bart/assets/color/main_colors.dart';
+import 'package:lib_bart/library/widgets/inherited/provider.dart';
+import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
 
 class BooksListWidget extends StatelessWidget {
   const BooksListWidget({Key? key}) : super(key: key);
@@ -15,8 +17,16 @@ class BooksListWidget extends StatelessWidget {
 class _BodyWidget extends StatelessWidget {
   const _BodyWidget({Key? key}) : super(key: key);
 
+  // void init(BooksListModel model) {
+  //   model.read();
+  // }
+
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<BooksListModel>(context);
+    if (model == null) return const SizedBox.shrink();
+    model.read();
+
     return ColoredBox(
       color: MainColors.color1,
       child: SafeArea(
@@ -142,6 +152,10 @@ class _BooksListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<BooksListModel>(context);
+    if (model == null) return const SizedBox.shrink();
+    final book = model.books.first;
+
     return Column(
       children: [
         SizedBox(
@@ -170,14 +184,14 @@ class _BooksListWidget extends StatelessWidget {
                           width: 160,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               _ElementOptionsBookWidget(
                                 icon: Icons.circle,
-                                text: 'UA',
+                                text: book.language,
                               ),
                               _ElementOptionsBookWidget(
                                 icon: Icons.grade,
-                                text: '2021',
+                                text: book.yearPublication.toString(),
                               ),
                             ],
                           ),
@@ -187,14 +201,14 @@ class _BooksListWidget extends StatelessWidget {
                           width: 160,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               _ElementOptionsBookWidget(
                                 icon: Icons.bookmark,
-                                text: '230',
+                                text: book.countPage.toString(),
                               ),
                               _ElementOptionsBookWidget(
                                 icon: Icons.book,
-                                text: 'Hard',
+                                text: book.typeOfBinding,
                               ),
                             ],
                           ),
@@ -205,9 +219,9 @@ class _BooksListWidget extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Title',
-                          style: TextStyle(
+                        Text(
+                          book.title,
+                          style: const TextStyle(
                             fontSize: 32,
                             color: Colors.white,
                           ),
@@ -223,17 +237,17 @@ class _BooksListWidget extends StatelessWidget {
                           width: MediaQuery.of(context).size.width - 245,
                           child: const _StarsWidget(),
                         ),
-                        const Text(
-                          'Genres:',
-                          style: TextStyle(
+                        Text(
+                          book.genres.toString(),
+                          style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 30),
-                        const Text(
-                          'Description',
-                          style: TextStyle(
+                        Text(
+                          book.description,
+                          style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,
                           ),
