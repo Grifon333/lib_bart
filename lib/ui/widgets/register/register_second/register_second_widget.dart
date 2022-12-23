@@ -21,6 +21,9 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<RegisterSecondModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     return ColoredBox(
       color: MainColors.color1,
       child: SafeArea(
@@ -36,13 +39,25 @@ class _BodyWidget extends StatelessWidget {
                 style: TextStyle(fontSize: 48),
               ),
               const SizedBox(height: 70),
-              MainTextField().tf1(hintText: 'Home address'),
+              MainTextField().tf1(
+                hintText: 'Home address',
+                onChange: (value) => model.homeAddress = value,
+              ),
               const SizedBox(height: 25),
-              MainTextField().tf1(hintText: 'First name'),
+              MainTextField().tf1(
+                hintText: 'First name',
+                onChange: (value) => model.firstName = value,
+              ),
               const SizedBox(height: 25),
-              MainTextField().tf1(hintText: 'Last name'),
+              MainTextField().tf1(
+                hintText: 'Second name',
+                onChange: (value) => model.secondName = value,
+              ),
               const SizedBox(height: 25),
-              MainTextField().tf1(hintText: 'Phone'),
+              MainTextField().tf1(
+                hintText: 'Phone',
+                onChange: (value) => model.phone = value,
+              ),
               const SizedBox(height: 65),
               const _ButtonsWidget(),
             ],
@@ -64,7 +79,7 @@ class _ButtonsWidget extends StatelessWidget {
     return Column(
       children: [
         MainButton().elevatedButton(
-          onPressed: () => model.toMainScreen(context),
+          onPressed: () => model.completedRegister(context),
           color: MainColors.color4,
           title: 'Next',
         ),

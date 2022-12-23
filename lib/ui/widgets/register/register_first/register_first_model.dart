@@ -36,7 +36,7 @@ class RegisterFirstModel extends ChangeNotifier {
       'login': _login,
       'password': _password,
       'first_name': null,
-      'last_name': null,
+      'second_name': null,
       'phone': null,
       'email': _email,
       'home_address': null,
