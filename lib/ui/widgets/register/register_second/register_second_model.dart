@@ -11,8 +11,10 @@ class RegisterSecondModel extends ChangeNotifier {
   final db = FirebaseFirestore.instance;
 
   void toMainScreen(BuildContext context) {
-    // TODO: Replacement navigation
-    Navigator.of(context).pushNamed(MainNavigationNameRoute.bottomNavigation);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      MainNavigationNameRoute.bottomNavigation,
+          (route) => false,
+    );
   }
 
   void completedRegister(BuildContext context) {
