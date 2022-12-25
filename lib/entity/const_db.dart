@@ -2,6 +2,13 @@ abstract class ConstDB {
 
   // tables
   static const TABLE_BOOKS = 'books';
+  static const TABLE_USERS = 'users';
+  static const TABLE_BOOK_IN_ORDER = 'bookInOrder';
+  static const TABLE_COURIER = 'courier';
+  static const TABLE_GENRE = 'genre';
+  static const TABLE_ORDER = 'order';
+  static const TABLE_REVIEW = 'review';
+  static const TABLE_VENDOR = 'vendor';
 
   // fields
   static const ID = 'id';

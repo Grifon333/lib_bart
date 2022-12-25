@@ -9,7 +9,6 @@ class BooksListModel extends ChangeNotifier {
 
   var _isLoadingInProgress = false;
   int _currentPage = 0;
-  // late int _totalPage;
 
   Future<List<Book>> read() async {
     List<Book> list = [];
@@ -62,7 +61,7 @@ class BooksListModel extends ChangeNotifier {
   }
 
   Future<void> _loadNextPage() async {
-    if (_isLoadingInProgress || _currentPage > 2) return;
+    if (_isLoadingInProgress || _currentPage > 1) return;
     _isLoadingInProgress = true;
 
     final booksList = await read();

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class NotifierProvider<Model extends ChangeNotifier> extends StatefulWidget {
-  final child;
+  final Widget child;
+  final bool isManagingModel;
   final Model Function() create;
 
   const NotifierProvider({
     Key? key,
     required this.child,
+    this.isManagingModel = true,
     required this.create,
   }) : super(key: key);
 
@@ -41,7 +43,9 @@ class _NotifierProviderState<Model extends ChangeNotifier>
 
   @override
   void dispose() {
-    _model.dispose();
+    if (widget.isManagingModel) {
+      _model.dispose();
+    }
     super.dispose();
   }
 

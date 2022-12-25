@@ -35,8 +35,9 @@ class _BodyWidget extends StatelessWidget {
         create: () => ProfileModel(),
       ),
       NotifierProvider(
-        child: const BooksListWidget(),
         create: () => BooksListModel(),
+        isManagingModel: false,
+        child: const BooksListWidget(),
       ),
       NotifierProvider(
         child: const SettingsWidget(),

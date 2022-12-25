@@ -2,20 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lib_bart/entity/const_db.dart';
 
 class Book {
-  final int id;
+  final String id;
   final String title;
   final String authors;
   final int yearPublication;
   final String publisher;
   final int countPage;
-  final List<int> genres;
+  final List<String> genres;
   final String typeOfBinding;
   final String language;
   final String description;
   final int idVendor;
   final int price;
   final int count;
-  final List<int> reviews;
+  final List<String> reviews;
 
   const Book({
     required this.id,
@@ -40,7 +40,7 @@ class Book {
   ) {
     final data = snapshot.data()!;
     return Book(
-      id: data[ConstDB.ID] ?? -1,
+      id: data[ConstDB.ID] ?? '-1',
       title: data[ConstDB.TITLE],
       authors: data[ConstDB.AUTHORS],
       yearPublication: data[ConstDB.YEAR_PUBLICATION],

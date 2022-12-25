@@ -248,11 +248,16 @@ class _BookInfoWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      book.title,
-                      style: const TextStyle(
-                        fontSize: 32,
-                        color: Colors.white,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 245,
+                      child: Text(
+                        book.title,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     SizedBox(
@@ -273,6 +278,7 @@ class _BookInfoWidget extends StatelessWidget {
                         color: Colors.white,
                       ),
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 30),
                     SizedBox(
@@ -284,7 +290,7 @@ class _BookInfoWidget extends StatelessWidget {
                           color: Colors.white,
                         ),
                         maxLines: 3,
-                        // TODO: Overflow
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const Expanded(child: SizedBox()),
