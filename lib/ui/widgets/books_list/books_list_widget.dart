@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lib_bart/assets/color/main_colors.dart';
+import 'package:lib_bart/entity/book.dart';
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
 import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
 
@@ -25,7 +26,7 @@ class _BodyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
-    model.read();
+    // model.read();
 
     return ColoredBox(
       color: MainColors.color1,
@@ -154,135 +155,170 @@ class _BooksListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
-    final book = model.books.first;
+    model.showBookAtIndex(0);
+    print(model.books.length);
 
-    return Column(
-      children: [
-        SizedBox(
-          height: 320,
-          width: MediaQuery.of(context).size.width - 50,
-          child: ColoredBox(
-            color: MainColors.color5,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: const BorderRadius.all(Radius.circular(8))),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 357,
+      child: ListView.separated(
+        itemBuilder: (BuildContext context, int index) {
+          final book = model.books[index];
+          model.showBookAtIndex(index);
+          return _BookInfoWidget(book: book);
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(
+            height: 20,
+          );
+        },
+        itemCount: model.books.length,
+      ),
+    );
+  }
+}
+
+class _BookInfoWidget extends StatelessWidget {
+  final Book book;
+
+  const _BookInfoWidget({
+    Key? key,
+    required this.book,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 320,
+      width: MediaQuery.of(context).size.width - 50,
+      child: ColoredBox(
+        color: MainColors.color5,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: const BorderRadius.all(Radius.circular(8))),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 230,
-                          width: 160,
-                          child: ColoredBox(color: Colors.black),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 160,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _ElementOptionsBookWidget(
-                                icon: Icons.circle,
-                                text: book.language,
-                              ),
-                              _ElementOptionsBookWidget(
-                                icon: Icons.grade,
-                                text: book.yearPublication.toString(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // const SizedBox(height: 5),
-                        SizedBox(
-                          width: 160,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _ElementOptionsBookWidget(
-                                icon: Icons.bookmark,
-                                text: book.countPage.toString(),
-                              ),
-                              _ElementOptionsBookWidget(
-                                icon: Icons.book,
-                                text: book.typeOfBinding,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 230,
+                      width: 160,
+                      child: ColoredBox(color: Colors.black),
                     ),
-                    const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          book.title,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            color: Colors.white,
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 160,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _ElementOptionsBookWidget(
+                            icon: Icons.circle,
+                            text: book.language,
                           ),
-                        ),
-                        SizedBox(
-                          height: 2,
-                          width: MediaQuery.of(context).size.width - 245,
-                          child: const ColoredBox(
-                            color: Colors.white,
+                          _ElementOptionsBookWidget(
+                            icon: Icons.grade,
+                            text: book.yearPublication.toString(),
                           ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 245,
-                          child: const _StarsWidget(),
-                        ),
-                        Text(
-                          book.genres.toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                        ],
+                      ),
+                    ),
+                    // const SizedBox(height: 5),
+                    SizedBox(
+                      width: 160,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _ElementOptionsBookWidget(
+                            icon: Icons.bookmark,
+                            text: book.countPage.toString(),
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        Text(
-                          book.description,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                          _ElementOptionsBookWidget(
+                            icon: Icons.book,
+                            text: book.typeOfBinding,
                           ),
-                        ),
-                        const SizedBox(height: 98),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                              const EdgeInsets.symmetric(
-                                horizontal: 40,
-                                vertical: 6,
-                              ),
-                            ),
-                            backgroundColor: MaterialStateProperty.all(
-                              MainColors.color4,
-                            ),
-                            side: MaterialStateProperty.all(
-                              const BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          child: const Text(
-                            '5.99\$',
-                            style: TextStyle(fontSize: 36),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      book.title,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2,
+                      width: MediaQuery.of(context).size.width - 245,
+                      child: const ColoredBox(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 245,
+                      child: const _StarsWidget(),
+                    ),
+                    Text(
+                      book.genres.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 245,
+                      child: Text(
+                        book.description,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                        maxLines: 3,
+                        // TODO: Overflow
+                      ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 245,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 6,
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(
+                            MainColors.color4,
+                          ),
+                          side: MaterialStateProperty.all(
+                            const BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        child: Text(
+                          '${book.price}\$',
+                          style: const TextStyle(fontSize: 36),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }
