@@ -57,6 +57,9 @@ class _UpBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.read<BooksListModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     return ColoredBox(
       color: Colors.white,
       child: SizedBox(
@@ -65,18 +68,21 @@ class _UpBarWidget extends StatelessWidget {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'LibBart',
                   style: TextStyle(fontSize: 64, color: MainColors.color2),
                 ),
-                SizedBox(width: 20),
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 60,
-                  color: MainColors.color3,
+                const SizedBox(width: 20),
+                IconButton(
+                  icon: const Icon(
+                    Icons.shopping_cart_outlined,
+                    color: MainColors.color3,
+                  ),
+                  iconSize: 60,
+                  onPressed: () => model.toCard(context),
                 ),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
               ],
             ),
             const ColoredBox(
@@ -168,6 +174,7 @@ class _BooksListWidget extends StatelessWidget {
           return _BookInfoWidget(
             book: book,
             genres: genres,
+            // index: index,
           );
         },
         separatorBuilder: (BuildContext context, int index) {
@@ -184,15 +191,20 @@ class _BooksListWidget extends StatelessWidget {
 class _BookInfoWidget extends StatelessWidget {
   final Book book;
   final List<String> genres;
+  // final int index;
 
   const _BookInfoWidget({
     Key? key,
     required this.book,
     required this.genres,
+    // required this.index,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.read<BooksListModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     return SizedBox(
       height: 320,
       width: MediaQuery.of(context).size.width - 50,
@@ -306,7 +318,10 @@ class _BookInfoWidget extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 245,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          print('Add book to card ${book.title}');
+                          await model.addBookInCard(book.id);
+                        },
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(
                             const EdgeInsets.symmetric(

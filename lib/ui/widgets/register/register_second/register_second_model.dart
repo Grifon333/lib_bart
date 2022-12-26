@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lib_bart/entity/const_db.dart';
 import 'package:lib_bart/settings/settings.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 
@@ -17,12 +18,12 @@ class RegisterSecondModel extends ChangeNotifier {
     );
   }
 
-  void completedRegister(BuildContext context) {
-    db.collection('users').doc(AppSettings.id).update({
-      'home_address': _homeAddress,
-      'first_name': _firstName,
-      'second_name': _secondName,
-      'phone': _phone,
+  Future<void> completedRegister(BuildContext context) async {
+    await db.collection(ConstDB.TABLE_USERS).doc(AppSettings.id).update({
+      ConstDB.HOME_ADDRESS: _homeAddress,
+      ConstDB.FIRST_NAME: _firstName,
+      ConstDB.SECOND_NAME: _secondName,
+      ConstDB.PHONE: _phone,
     }).then((value) => print("DocumentSnapshot successfully updated!"),
         onError: (e) => print("Error updating document $e"));
 

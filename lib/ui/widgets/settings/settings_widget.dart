@@ -38,7 +38,7 @@ class _UpBarWidget extends StatelessWidget {
         child: Column(
           children: const [
             Text(
-              'LibBart',
+              'Settings',
               style: TextStyle(fontSize: 64, color: MainColors.color2),
             ),
             ColoredBox(

@@ -40,7 +40,7 @@ class Book {
   ) {
     final data = snapshot.data()!;
     return Book(
-      id: data[ConstDB.ID] ?? '-1',
+      id: snapshot.id,
       title: data[ConstDB.TITLE],
       authors: data[ConstDB.AUTHORS],
       yearPublication: data[ConstDB.YEAR_PUBLICATION],

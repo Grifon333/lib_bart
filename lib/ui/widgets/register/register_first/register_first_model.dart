@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lib_bart/entity/const_db.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lib_bart/settings/settings.dart';
@@ -18,7 +19,7 @@ class RegisterFirstModel extends ChangeNotifier {
         email: _email,
         password: _password,
       );
-      write();
+      await write();
       Navigator.of(context).pushNamed(MainNavigationNameRoute.registerSecond);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -31,18 +32,18 @@ class RegisterFirstModel extends ChangeNotifier {
     }
   }
 
-  void write() async {
+  Future<void> write() async {
     final user = <String, dynamic>{
-      'login': _login,
-      'password': _password,
-      'first_name': null,
-      'second_name': null,
-      'phone': null,
-      'email': _email,
-      'home_address': null,
+      ConstDB.LOGIN: _login,
+      ConstDB.PASSWORD: _password,
+      ConstDB.FIRST_NAME: null,
+      ConstDB.SECOND_NAME: null,
+      ConstDB.PHONE: null,
+      ConstDB.EMAIL: _email,
+      ConstDB.HOME_ADDRESS: null,
     };
 
-    final addUser = await db.collection('users').add(user);
+    final addUser = await db.collection(ConstDB.TABLE_USERS).add(user);
     AppSettings.id = addUser.id;
   }
 

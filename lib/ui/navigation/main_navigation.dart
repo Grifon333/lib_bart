@@ -1,6 +1,8 @@
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
 import 'package:lib_bart/ui/widgets/bottom_navigation/bottom_navigation_model.dart';
 import 'package:lib_bart/ui/widgets/bottom_navigation/bottom_navigation_widget.dart';
+import 'package:lib_bart/ui/widgets/card/card_model.dart';
+import 'package:lib_bart/ui/widgets/card/card_widget.dart';
 import 'package:lib_bart/ui/widgets/login/login_model.dart';
 import 'package:lib_bart/ui/widgets/login/login_widget.dart';
 import 'package:lib_bart/ui/widgets/register/register_first/register_first_model.dart';
@@ -15,6 +17,7 @@ class MainNavigationNameRoute {
   static const registerFirst = '/register/first';
   static const registerSecond = '/register/second';
   static const bottomNavigation = '/bottomNavigation';
+  static const card = '/bottomNavigation/card';
 }
 
 class MainNavigation {
@@ -35,6 +38,10 @@ class MainNavigation {
     MainNavigationNameRoute.bottomNavigation: (context) => NotifierProvider(
           child: const BottomNavigationWidget(),
           create: () => BottomNavigationModel(),
+        ),
+    MainNavigationNameRoute.card: (context) => NotifierProvider(
+          child: const CardWidget(),
+          create: () => CardModel(),
         ),
   };
 

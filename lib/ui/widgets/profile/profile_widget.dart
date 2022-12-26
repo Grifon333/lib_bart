@@ -84,7 +84,7 @@ class _UpBarWidget extends StatelessWidget {
         child: Column(
           children: const [
             Text(
-              'LibBart',
+              'Profile',
               style: TextStyle(fontSize: 64, color: MainColors.color2),
             ),
             ColoredBox(

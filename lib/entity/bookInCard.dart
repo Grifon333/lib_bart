@@ -1,30 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lib_bart/entity/const_db.dart';
 
-class Genre {
+class BookInCard {
   final String id;
-  final String title;
+  final String idBook;
+  final int count;
 
-  const Genre({
+  BookInCard({
     required this.id,
-    required this.title,
+    required this.idBook,
+    required this.count,
   });
 
-  factory Genre.fromFirestore(
+  factory BookInCard.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data()!;
-    return Genre(
+    return BookInCard(
       id: snapshot.id,
-      title: data[ConstDB.TITLE],
+      idBook: data[ConstDB.ID_BOOK],
+      count: data[ConstDB.COUNT],
     );
   }
 
   Map<String, dynamic> toFirestore() {
-    return {
+    return{
       ConstDB.ID: id,
-      ConstDB.TITLE: title,
+      ConstDB.ID_BOOK: idBook,
+      ConstDB.COUNT: count,
     };
   }
 }

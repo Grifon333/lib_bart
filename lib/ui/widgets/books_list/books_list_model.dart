@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:lib_bart/entity/book.dart';
 import 'package:lib_bart/entity/const_db.dart';
 import 'package:lib_bart/entity/genre.dart';
+import 'package:lib_bart/ui/navigation/main_navigation.dart';
 
 class BooksListModel extends ChangeNotifier {
   List<Book> books = [];
@@ -20,7 +21,6 @@ class BooksListModel extends ChangeNotifier {
       (event) async {
         for (var doc in event.docs) {
           print("${doc.id} => ${doc.data()}");
-          Map<String, dynamic> data = doc.data();
 
           final ref = doc.reference.withConverter(
             fromFirestore: Book.fromFirestore,
@@ -47,7 +47,7 @@ class BooksListModel extends ChangeNotifier {
 
     final booksList = await _read();
     List<List<String>> genresList = [];
-    for(int i = 0; i < booksList.length; i++) {
+    for (int i = 0; i < booksList.length; i++) {
       final t = await _loadGenres(booksList[i].genres);
       genresList.add(t);
     }
@@ -87,5 +87,18 @@ class BooksListModel extends ChangeNotifier {
     }
 
     return genres;
+  }
+
+  void toCard(BuildContext context) {
+    Navigator.of(context).pushNamed(MainNavigationNameRoute.card);
+  }
+
+  Future<void> addBookInCard(String id) async {
+    final bookInCard = <String, dynamic>{
+      ConstDB.ID_BOOK: id,
+      ConstDB.COUNT: 1,
+    };
+
+    await db.collection(ConstDB.TABLE_BOOK_IN_ORDER).add(bookInCard);
   }
 }
