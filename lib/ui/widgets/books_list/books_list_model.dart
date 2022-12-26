@@ -2,15 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lib_bart/entity/book.dart';
 import 'package:lib_bart/entity/const_db.dart';
+import 'package:lib_bart/entity/genre.dart';
 
 class BooksListModel extends ChangeNotifier {
-  List<Book> books = <Book>[];
+  List<Book> books = [];
+  List<List<String>> allGenres = [];
   final db = FirebaseFirestore.instance;
 
   var _isLoadingInProgress = false;
   int _currentPage = 0;
 
-  Future<List<Book>> read() async {
+  Future<List<Book>> _read() async {
     List<Book> list = [];
     print('Read:');
 
@@ -33,40 +35,27 @@ class BooksListModel extends ChangeNotifier {
           } else {
             print('No such document');
           }
-
-          // books.add(Book(
-          //   id: int.parse(doc.id),
-          //   title: doc.data()['title'],
-          //   authors: doc.data()['authors'],
-          //   yearPublication: doc.data()['yearPublication'],
-          //   publisher: doc.data()['publisher'],
-          //   countPage: doc.data()['countPage'],
-          //   genres: (doc.data()['genres'] as List<dynamic>).map((e) => e as int).toList(),
-          //   typeOfBinding: doc.data()['typeOfBinding'],
-          //   language: doc.data()['language'],
-          //   description: doc.data()['description'],
-          //   idVendor: doc.data()['idVendor'],
-          //   price: doc.data()['price'],
-          //   count: doc.data()['count'],
-          //   reviews: (doc.data()['reviews'] as List<dynamic>).map((e) => e as int).toList(),
-          // ));
         }
       },
     );
     return list;
   }
 
-  List<Book> getBooks() {
-    return books;
-  }
-
   Future<void> _loadNextPage() async {
     if (_isLoadingInProgress || _currentPage > 1) return;
     _isLoadingInProgress = true;
 
-    final booksList = await read();
+    final booksList = await _read();
+    List<List<String>> genresList = [];
+    for(int i = 0; i < booksList.length; i++) {
+      final t = await _loadGenres(booksList[i].genres);
+      genresList.add(t);
+    }
+
     books.clear();
+    allGenres.clear();
     books.addAll(booksList);
+    allGenres.addAll(genresList);
     _isLoadingInProgress = false;
     _currentPage++;
     print('Length: ${books.length}');
@@ -76,5 +65,27 @@ class BooksListModel extends ChangeNotifier {
   void showBookAtIndex(int index) {
     if (index < books.length - 1) return;
     _loadNextPage();
+  }
+
+  Future<List<String>> _loadGenres(List<String> listId) async {
+    List<String> genres = [];
+    for (int i = 0; i < listId.length; i++) {
+      final ref = db.collection("genre").doc(listId[i]).withConverter(
+            fromFirestore: Genre.fromFirestore,
+            toFirestore: (Genre genre, _) => genre.toFirestore(),
+          );
+
+      final docSnap = await ref.get();
+      final genre = docSnap.data(); // Convert to City object
+      if (genre != null) {
+        genres.add(genre.title);
+        print(genre);
+      } else {
+        print("No such document. Genre");
+        genres.add('');
+      }
+    }
+
+    return genres;
   }
 }

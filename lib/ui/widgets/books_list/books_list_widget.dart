@@ -163,8 +163,12 @@ class _BooksListWidget extends StatelessWidget {
       child: ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final book = model.books[index];
+          final genres = model.allGenres[index];
           model.showBookAtIndex(index);
-          return _BookInfoWidget(book: book);
+          return _BookInfoWidget(
+            book: book,
+            genres: genres,
+          );
         },
         separatorBuilder: (BuildContext context, int index) {
           return const SizedBox(
@@ -179,10 +183,12 @@ class _BooksListWidget extends StatelessWidget {
 
 class _BookInfoWidget extends StatelessWidget {
   final Book book;
+  final List<String> genres;
 
   const _BookInfoWidget({
     Key? key,
     required this.book,
+    required this.genres,
   }) : super(key: key);
 
   @override
@@ -271,14 +277,17 @@ class _BookInfoWidget extends StatelessWidget {
                       width: MediaQuery.of(context).size.width - 245,
                       child: const _StarsWidget(),
                     ),
-                    Text(
-                      book.genres.toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 245,
+                      child: Text(
+                        genres.toString(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 30),
                     SizedBox(

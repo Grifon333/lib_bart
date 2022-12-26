@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lib_bart/entity/const_db.dart';
 
 class Genre {
-  final int id;
+  final String id;
   final String title;
 
   const Genre({
@@ -16,7 +16,7 @@ class Genre {
   ) {
     final data = snapshot.data()!;
     return Genre(
-      id: data[ConstDB.ID],
+      id: data[ConstDB.ID] ?? '-1',
       title: data[ConstDB.TITLE],
     );
   }
