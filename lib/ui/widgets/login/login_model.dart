@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lib_bart/entity/const_db.dart';
+import 'package:lib_bart/settings/settings.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 
 class LoginModel extends ChangeNotifier {
@@ -20,10 +23,20 @@ class LoginModel extends ChangeNotifier {
 
   void loginCustomer(BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _login,
         password: _password,
       );
+
+      final db = FirebaseFirestore.instance;
+      final user = await db
+          .collection(ConstDB.TABLE_USERS)
+          .where(ConstDB.EMAIL, isEqualTo: _login)
+          .where(ConstDB.PASSWORD, isEqualTo: _password)
+          .get();
+      final id = user.docs.first.id;
+      AppSettings.id = id;
+
       Navigator.of(context).pushNamedAndRemoveUntil(
         MainNavigationNameRoute.bottomNavigation,
         (route) => false,

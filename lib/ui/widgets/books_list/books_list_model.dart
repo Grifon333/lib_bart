@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:lib_bart/entity/book.dart';
 import 'package:lib_bart/entity/const_db.dart';
 import 'package:lib_bart/entity/genre.dart';
+import 'package:lib_bart/settings/settings.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 
 class BooksListModel extends ChangeNotifier {
@@ -98,7 +99,39 @@ class BooksListModel extends ChangeNotifier {
       ConstDB.ID_BOOK: id,
       ConstDB.COUNT: 1,
     };
-
     await db.collection(ConstDB.TABLE_BOOK_IN_ORDER).add(bookInCard);
+
+    final ref = await db
+        .collection(ConstDB.TABLE_ORDER)
+        .where(ConstDB.ID_USER, isEqualTo: AppSettings.id)
+        .get();
+    if (ref.size == 0) {
+      final item = <String, dynamic>{
+        ConstDB.ID_USER: AppSettings.id,
+        ConstDB.ID_BOOKS_IN_ORDER: [id],
+        ConstDB.ADDRESS: null,
+        ConstDB.DATE_REGISTRATION: null,
+        ConstDB.STATUS: 'In process'
+      };
+      await db.collection(ConstDB.TABLE_ORDER).add(item);
+    } else {
+      final ord = await db
+          .collection(ConstDB.TABLE_ORDER)
+          .where('idUser', isEqualTo: AppSettings.id)
+          .get();
+      final map = (await db
+              .collection(ConstDB.TABLE_ORDER)
+              .doc(ord.docs.first.id)
+              .get())
+          .data();
+      List<String> list = (map?['idBooksInOrder'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList();
+      list.add(id);
+      list = list.toSet().toList();
+      db.collection(ConstDB.TABLE_ORDER).doc(ord.docs.first.id).update({
+        'idBooksInOrder': list,
+      });
+    }
   }
 }

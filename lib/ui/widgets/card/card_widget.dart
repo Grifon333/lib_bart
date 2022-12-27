@@ -24,6 +24,10 @@ class _BodyWidget extends StatelessWidget {
         children: const [
           _UpBarWidget(),
           SizedBox(height: 30),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25),
+            child: _ListBooksWidget(),
+          ),
         ],
       ),
     );
@@ -84,7 +88,7 @@ class _ListBooksWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height - 357,
       child: ListView.separated(
         itemBuilder: (BuildContext context, int index) {
-          return SizedBox();
+          return const _BooksInfoWidget();
         },
         separatorBuilder: (BuildContext context, int index) {
           return const SizedBox(
@@ -102,6 +106,134 @@ class _BooksInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return SizedBox(
+      height: 160,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          // gradient: new LinearGradient(
+          //   colors: [Colors.red, Colors.cyan],
+          // ),
+          color: MainColors.color5,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(15),
+          child: Row(
+            children: [
+              const SizedBox(
+                height: 120,
+                width: 80,
+                child: ColoredBox(
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(width: 25),
+              Column(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 185,
+                    child: Text(
+                      'title',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        color: Colors.black,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 1,
+                    width: MediaQuery.of(context).size.width - 185,
+                    child: const ColoredBox(
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 185,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Count:',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(width: 30),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.redAccent),
+                          ),
+                          child: const Text(
+                            '-',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            '1',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.green),
+                          ),
+                          child: const Text(
+                            '+',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 185,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(MainColors.color3),
+                            side: MaterialStateProperty.all(
+                              const BorderSide(
+                                color: Colors.black,
+                                width: 0.4,
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Remove',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        Text('9.99\$',
+                        style: const TextStyle(
+                          fontSize: 20
+                        ),),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

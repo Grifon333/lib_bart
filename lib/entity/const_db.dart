@@ -33,11 +33,11 @@ abstract class ConstDB {
   static const PHONE = 'phone';
   static const EMAIL = 'email';
   static const HOME_ADDRESS = 'home_address';
-  // static const = '';
-  // static const = '';
-  // static const = '';
-  // static const = '';
-  // static const = '';
+  static const ID_USER = 'idUser';
+  static const ID_BOOKS_IN_ORDER = 'idBooksInOrder';
+  static const ADDRESS = 'address';
+  static const DATE_REGISTRATION = 'dateRegistration';
+  static const STATUS = 'status';
   // static const = '';
   // static const = '';
   // static const = '';
