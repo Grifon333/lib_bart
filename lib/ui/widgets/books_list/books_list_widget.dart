@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lib_bart/assets/color/main_colors.dart';
-import 'package:lib_bart/entity/book.dart';
+import 'package:lib_bart/domain/entity/book.dart';
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
 import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
 

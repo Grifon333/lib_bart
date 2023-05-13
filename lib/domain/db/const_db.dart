@@ -1,8 +1,7 @@
 abstract class ConstDB {
-
-  // tables
-  static const TABLE_BOOKS = 'books';
-  static const TABLE_USERS = 'users';
+  /// tables
+  static const TABLE_BOOK = 'book';
+  static const TABLE_USER = 'user';
   static const TABLE_BOOK_IN_ORDER = 'bookInOrder';
   static const TABLE_COURIER = 'courier';
   static const TABLE_GENRE = 'genre';
@@ -10,37 +9,55 @@ abstract class ConstDB {
   static const TABLE_REVIEW = 'review';
   static const TABLE_VENDOR = 'vendor';
 
-  // fields
-  static const ID = 'id';
+  /// fields
+  // Book
   static const TITLE = 'title';
   static const AUTHORS = 'authors';
   static const YEAR_PUBLICATION = 'yearPublication';
   static const PUBLISHER = 'publisher';
   static const COUNT_PAGE = 'countPage';
-  static const GENRES = 'genres';
+  static const LIST_GENTES_ID = 'listGenresId';
   static const TYPE_OF_BINDING = 'typeOfBinding';
   static const LANGUAGE = 'language';
   static const DESCRIPTION = 'description';
   static const ID_VENDOR = 'idVendor';
   static const PRICE = 'price';
   static const COUNT = 'count';
-  static const REVIEW = 'reviews';
+
+  // Book in order
   static const ID_BOOK = 'idBook';
-  static const LOGIN = 'login';
-  static const PASSWORD = 'password';
-  static const FIRST_NAME = 'first_name';
-  static const SECOND_NAME = 'second_name';
-  static const PHONE = 'phone';
-  static const EMAIL = 'email';
-  static const HOME_ADDRESS = 'home_address';
+  static const ID_ORDER = 'idOrder';
+  // COUNT
+
+  // Genre
+  // TITLE
+
+  // Order
   static const ID_USER = 'idUser';
-  static const ID_BOOKS_IN_ORDER = 'idBooksInOrder';
   static const ADDRESS = 'address';
   static const DATE_REGISTRATION = 'dateRegistration';
   static const STATUS = 'status';
-  // static const = '';
-  // static const = '';
-  // static const = '';
-  // static const = '';
+  static const ID_COURIER = 'idCourier';
 
+  // Vendor
+  static const FULL_NAME = 'fullName';
+  static const NUMBER = 'number';
+  static const EMAIL = 'email';
+
+  // Courier
+  // FULL_NAME
+  // NUMBER
+  // STATUS
+
+  // User
+  // FULL_NAME
+  // NUMBER
+  static const NICKNAME = 'nickname';
+  static const PASSWORD = 'password';
+  // EMAIL
+
+  // Review
+  static const CONTENT = 'content';
+  // ID_BOOK
+  // ID_USER
 }

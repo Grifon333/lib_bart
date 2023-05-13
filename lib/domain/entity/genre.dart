@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lib_bart/entity/const_db.dart';
+import 'package:lib_bart/domain/db/const_db.dart';
 
 class Genre {
-  final String id;
   final String title;
 
   const Genre({
-    required this.id,
     required this.title,
   });
 
@@ -16,14 +14,12 @@ class Genre {
   ) {
     final data = snapshot.data()!;
     return Genre(
-      id: snapshot.id,
       title: data[ConstDB.TITLE],
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      ConstDB.ID: id,
       ConstDB.TITLE: title,
     };
   }

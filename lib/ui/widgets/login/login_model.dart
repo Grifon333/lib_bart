@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lib_bart/entity/const_db.dart';
+import 'package:lib_bart/domain/db/const_db.dart';
 import 'package:lib_bart/settings/settings.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 

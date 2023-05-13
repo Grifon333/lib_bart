@@ -1,21 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lib_bart/entity/const_db.dart';
+import 'package:lib_bart/domain/db/const_db.dart';
 
 class Order {
-  final String id;
   final String idUser;
-  final List<String> idBooksInOrder;
   final String? address;
   final String dateRegistration;
   final String status;
+  final String? idCourier;
 
   Order({
-    required this.id,
     required this.idUser,
-    required this.idBooksInOrder,
     required this.address,
     required this.dateRegistration,
     required this.status,
+    required this.idCourier,
   });
 
   factory Order.fromFirestore(
@@ -24,23 +22,21 @@ class Order {
   ) {
     final data = snapshot.data()!;
     return Order(
-      id: snapshot.id,
       idUser: data[ConstDB.ID_USER],
-      idBooksInOrder: data[ConstDB.ID_BOOKS_IN_ORDER],
       address: data[ConstDB.ADDRESS],
       dateRegistration: data[ConstDB.DATE_REGISTRATION],
       status: data[ConstDB.STATUS],
+      idCourier: data[ConstDB.ID_COURIER],
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      ConstDB.ID: id,
       ConstDB.ID_USER: idUser,
-      ConstDB.ID_BOOKS_IN_ORDER: idBooksInOrder,
       ConstDB.ADDRESS: address,
       ConstDB.DATE_REGISTRATION: dateRegistration,
       ConstDB.STATUS: status,
+      ConstDB.ID_COURIER: idCourier,
     };
   }
 }

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:lib_bart/entity/book.dart';
-import 'package:lib_bart/entity/const_db.dart';
-import 'package:lib_bart/entity/genre.dart';
+import 'package:lib_bart/domain/entity/book.dart';
+import 'package:lib_bart/domain/db/const_db.dart';
+import 'package:lib_bart/domain/entity/genre.dart';
 import 'package:lib_bart/settings/settings.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 

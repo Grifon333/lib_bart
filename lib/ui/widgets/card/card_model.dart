@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:flutter/cupertino.dart';
-import 'package:lib_bart/entity/order.dart';
+import 'package:lib_bart/domain/entity/order.dart';
 import 'package:lib_bart/settings/settings.dart';
 
 class CardModel extends ChangeNotifier {
