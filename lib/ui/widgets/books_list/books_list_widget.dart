@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lib_bart/assets/color/main_colors.dart';
 import 'package:lib_bart/domain/entity/book.dart';
+import 'package:lib_bart/domain/entity/genre.dart';
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
 import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
 
@@ -99,6 +100,7 @@ class _UpBarWidget extends StatelessWidget {
   }
 }
 
+//TODO: remove left options
 class _SearchAndOptionsWidget extends StatelessWidget {
   const _SearchAndOptionsWidget({Key? key}) : super(key: key);
 
@@ -161,7 +163,7 @@ class _BooksListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = NotifierProvider.watch<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
-    model.showBookAtIndex(0);
+    model.fun();
     print(model.books.length);
 
     return SizedBox(
@@ -169,8 +171,7 @@ class _BooksListWidget extends StatelessWidget {
       child: ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           final book = model.books[index];
-          final genres = model.allGenres[index];
-          model.showBookAtIndex(index);
+          final genres = model.genres[index];
           return _BookInfoWidget(
             book: book,
             genres: genres,
@@ -190,7 +191,7 @@ class _BooksListWidget extends StatelessWidget {
 
 class _BookInfoWidget extends StatelessWidget {
   final Book book;
-  final List<String> genres;
+  final List<Genre> genres;
   // final int index;
 
   const _BookInfoWidget({
@@ -292,7 +293,7 @@ class _BookInfoWidget extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 245,
                       child: Text(
-                        genres.toString(),
+                        genres.map((e) => e.title).toList().toString(),
                         style: const TextStyle(
                           fontSize: 20,
                           color: Colors.white,
@@ -320,7 +321,7 @@ class _BookInfoWidget extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () async {
                           print('Add book to card ${book.title}');
-                          await model.addBookInCard(book.id);
+                          // await model.addBookInCard(book.id);
                         },
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(

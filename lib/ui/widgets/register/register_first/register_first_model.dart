@@ -1,59 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:lib_bart/domain/db/const_db.dart';
+import 'package:lib_bart/domain/db/modelDB.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lib_bart/settings/settings.dart';
 
 class RegisterFirstModel extends ChangeNotifier {
+  //TODO: login -> nickname
+  //TODO: confirm password
   late String _login;
   late String _email;
   late String _password;
   late String _confirmPassword;
-  final db = FirebaseFirestore.instance;
-
-  void register(BuildContext context) async {
-    try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _email,
-        password: _password,
-      );
-      await write();
-      Navigator.of(context).pushNamed(MainNavigationNameRoute.registerSecond);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> write() async {
-    final user = <String, dynamic>{
-      ConstDB.LOGIN: _login,
-      ConstDB.PASSWORD: _password,
-      ConstDB.FIRST_NAME: null,
-      ConstDB.SECOND_NAME: null,
-      ConstDB.PHONE: null,
-      ConstDB.EMAIL: _email,
-      ConstDB.HOME_ADDRESS: null,
-    };
-
-    final addUser = await db.collection(ConstDB.TABLE_USERS).add(user);
-    AppSettings.id = addUser.id;
-  }
-
-  String get confirmPassword => _confirmPassword;
-
-  String get password => _password;
-
-  String get email => _email;
-
-  String get login => _login;
 
   set confirmPassword(String value) {
     _confirmPassword = value;
@@ -69,5 +24,28 @@ class RegisterFirstModel extends ChangeNotifier {
 
   set login(String value) {
     _login = value;
+  }
+
+  void register(BuildContext context) async {
+    try {
+      await ModelDB().registerWithEmailAndPassword(_email, _password);
+      await ModelDB().addUser(
+        nickname: _login,
+        email: _email,
+        password: _password,
+      );
+      // ModelDB().updateUser(number: '+380630295302');
+      navigate(context);
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  void navigate(BuildContext context) {
+    // Navigator.of(context).pushNamed(MainNavigationNameRoute.registerSecond);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      MainNavigationNameRoute.bottomNavigation,
+          (route) => false,
+    );
   }
 }

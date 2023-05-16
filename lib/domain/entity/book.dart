@@ -11,7 +11,7 @@ class Book {
   final String typeOfBinding;
   final String language;
   final String description;
-  final int idVendor;
+  final String idVendor;
   final int price;
   final int count;
 
@@ -68,5 +68,23 @@ class Book {
       ConstDB.PRICE: price,
       ConstDB.COUNT: count,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Book {\n'
+        'title: $title,\n'
+        'authors: $authors,\n'
+        'yearPublication: $yearPublication,\n'
+        'publisher: $publisher,\n'
+        'countPage: $countPage,\n'
+        'listGenresId: $listGenresId,\n'
+        'typeOfBinding: $typeOfBinding,\n'
+        'language: $language,\n'
+        'description: $description,\n'
+        'idVendor: $idVendor,\n'
+        'price: $price,\n'
+        'count: $count\n'
+        '}';
   }
 }

@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lib_bart/domain/db/const_db.dart';
-import 'package:lib_bart/settings/settings.dart';
+import 'package:lib_bart/domain/db/modelDB.dart';
 import 'package:lib_bart/ui/navigation/main_navigation.dart';
 
 class LoginModel extends ChangeNotifier {
+  //TODO: login -> email
   late String _login;
   late String _password;
 
@@ -21,34 +19,22 @@ class LoginModel extends ChangeNotifier {
 
   String get password => _password;
 
-  void loginCustomer(BuildContext context) async {
+  void loginCustomer(BuildContext context) {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _login,
-        password: _password,
-      );
-
-      final db = FirebaseFirestore.instance;
-      final user = await db
-          .collection(ConstDB.TABLE_USERS)
-          .where(ConstDB.EMAIL, isEqualTo: _login)
-          .where(ConstDB.PASSWORD, isEqualTo: _password)
-          .get();
-      final id = user.docs.first.id;
-      AppSettings.id = id;
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        MainNavigationNameRoute.bottomNavigation,
-        (route) => false,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      ModelDB().singWithEmailAndPassword(_login, _password);
+      ModelDB().getUser(_login, _password);
+      //TODO: context
+      navigateToMainScreen(context);
+    } on Exception catch (e) {
+      print(e);
     }
-
     notifyListeners();
+  }
+
+  void navigateToMainScreen(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      MainNavigationNameRoute.bottomNavigation,
+      (route) => false,
+    );
   }
 }
