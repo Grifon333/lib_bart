@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lib_bart/assets/color/main_colors.dart';
+import 'package:lib_bart/library/widgets/inherited/provider.dart';
+import 'package:lib_bart/ui/widgets/profile/profile_model.dart';
 
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({Key? key}) : super(key: key);
@@ -17,6 +19,9 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.read<ProfileModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     return SafeArea(
       child: ColoredBox(
         color: MainColors.color1,
@@ -46,13 +51,38 @@ class _BodyWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 50),
-                    const _OptionProfileWidget(title: 'Name'),
-                    const _OptionProfileWidget(title: 'First name'),
-                    const _OptionProfileWidget(title: 'Last name'),
-                    const _OptionProfileWidget(title: 'Phone'),
-                    const _OptionProfileWidget(title: 'Email'),
-                    const _OptionProfileWidget(title: 'Gender'),
-                    const _OptionProfileWidget(title: 'Home address'),
+                    FutureBuilder(
+                      future: model.getUserData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _OptionProfileWidget(
+                                title:
+                                    'Full name: ${model.user.fullName ?? 'none'}',
+                              ),
+                              _OptionProfileWidget(
+                                title: 'Number: ${model.user.number ?? 'none'}',
+                              ),
+                              _OptionProfileWidget(
+                                title: 'Nickname: ${model.user.nickname}',
+                              ),
+                              _OptionProfileWidget(
+                                title: 'Password: ${model.user.password}',
+                              ),
+                              _OptionProfileWidget(
+                                title: 'Email: ${model.user.email}',
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
                     const _ButtonWidget(
                       title: 'Change',
                       color: MainColors.color4,
@@ -115,7 +145,7 @@ class _OptionProfileWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 32),
+        style: const TextStyle(fontSize: 24),
       ),
     );
   }

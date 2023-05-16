@@ -10,8 +10,8 @@ class LoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<LoginModel>(context);
-    if (model == null) return const SizedBox.shrink();
+    // final model = NotifierProvider.watch<LoginModel>(context);
+    // if (model == null) return const SizedBox.shrink();
 
     return const Scaffold(
       body: _BodyWidget(),

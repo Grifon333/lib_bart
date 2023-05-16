@@ -22,7 +22,7 @@ class LoginModel extends ChangeNotifier {
   void loginCustomer(BuildContext context) {
     try {
       ModelDB().singWithEmailAndPassword(_login, _password);
-      ModelDB().getUser(_login, _password);
+      ModelDB().getUserByEmailAndPassword(_login, _password);
       //TODO: context
       navigateToMainScreen(context);
     } on Exception catch (e) {

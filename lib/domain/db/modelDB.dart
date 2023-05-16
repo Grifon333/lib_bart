@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:lib_bart/domain/db/const_db.dart';
 import 'package:lib_bart/domain/entity/book.dart';
 import 'package:lib_bart/domain/entity/genre.dart';
+import 'package:lib_bart/domain/entity/user.dart';
 import 'package:lib_bart/settings/settings.dart';
 
 class ModelDB {
@@ -26,7 +27,7 @@ class ModelDB {
     }
   }
 
-  Future<void> getUser(String email, String password) async {
+  Future<void> getUserByEmailAndPassword(String email, String password) async {
     //TODO: change Table title 'users' -> 'user'
     //TODO: maybe use convertor from Map to Object as in method addUser()
     // final docs = (await db.collection('users').snapshots().first).docs;
@@ -150,6 +151,7 @@ class ModelDB {
       },
       onError: (e) => print("Error completing (get Books): $e"),
     );
+    booksList.sort((a, b) => a.title.compareTo(b.title));
     return booksList;
   }
 
@@ -183,5 +185,18 @@ class ModelDB {
     //   onError: (e) => print("Error completing (get Genres): $e"),
     // );
     return genresList;
+  }
+
+  Future<User> getUserById() async {
+    User user = (await db
+            .collection('users')
+            .withConverter(
+              fromFirestore: User.fromFirestore,
+              toFirestore: (User user, _) => user.toFirestore(),
+            )
+            .doc(AppSettings.id)
+            .get())
+        .data()!;
+    return user;
   }
 }

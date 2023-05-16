@@ -8,7 +8,7 @@ class BooksListModel extends ChangeNotifier {
   List<Book> books = [];
   List<List<Genre>> genres = [];
 
-  Future<void> fun() async {
+  Future<void> getData() async {
     // Book book = const Book(
     //   title: 'title2',
     //   authors: 'authors2',
@@ -34,13 +34,7 @@ class BooksListModel extends ChangeNotifier {
       List<Genre> genresList = await ModelDB().getGenres(book.listGenresId);
       genres.add(genresList);
     }
-    print(genres.length);
-    for(var genresRow in genres) {
-      print(genresRow.length);
-      for(var genre in genresRow) {
-        print(genre.title);
-      }
-    }
+    notifyListeners();
   }
 
   void toCard(BuildContext context) {

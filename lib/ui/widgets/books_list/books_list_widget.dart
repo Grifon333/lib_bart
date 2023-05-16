@@ -25,8 +25,8 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<BooksListModel>(context);
-    if (model == null) return const SizedBox.shrink();
+    // final model = NotifierProvider.watch<BooksListModel>(context);
+    // if (model == null) return const SizedBox.shrink();
     // model.read();
 
     return ColoredBox(
@@ -161,29 +161,42 @@ class _BooksListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.watch<BooksListModel>(context);
+    final model = NotifierProvider.read<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
-    model.fun();
-    print(model.books.length);
 
     return SizedBox(
       height: MediaQuery.of(context).size.height - 357,
-      child: ListView.separated(
-        itemBuilder: (BuildContext context, int index) {
-          final book = model.books[index];
-          final genres = model.genres[index];
-          return _BookInfoWidget(
-            book: book,
-            genres: genres,
-            // index: index,
-          );
+      child: FutureBuilder(
+        future: model.getData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ListView.separated(
+              itemBuilder: (BuildContext context, int index) {
+                final book = model.books[index];
+                final genres = model.genres[index];
+                return _BookInfoWidget(
+                  book: book,
+                  genres: genres,
+                  // index: index,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  height: 20,
+                );
+              },
+              itemCount: model.books.length,
+            );
+          } else {
+            return const Center(
+              child: SizedBox(
+                height: 100,
+                width: 100,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
         },
-        separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(
-            height: 20,
-          );
-        },
-        itemCount: model.books.length,
       ),
     );
   }
@@ -192,6 +205,7 @@ class _BooksListWidget extends StatelessWidget {
 class _BookInfoWidget extends StatelessWidget {
   final Book book;
   final List<Genre> genres;
+
   // final int index;
 
   const _BookInfoWidget({
@@ -203,8 +217,8 @@ class _BookInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<BooksListModel>(context);
-    if (model == null) return const SizedBox.shrink();
+    // final model = NotifierProvider.read<BooksListModel>(context);
+    // if (model == null) return const SizedBox.shrink();
 
     return SizedBox(
       height: 320,
