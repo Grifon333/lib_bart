@@ -45,8 +45,7 @@ class BooksListModel extends ChangeNotifier {
 
   Future<void> addBookInCard(int index) async {
     await ModelDB().addBookToCard(books[index]);
-    selectedBooks[index] = true;
-    print(selectedBooks);
+    selectedBooks[index] = true;\
     notifyListeners();
   }
 }

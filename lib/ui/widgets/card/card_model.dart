@@ -1,27 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:flutter/cupertino.dart';
-import 'package:lib_bart/domain/entity/order.dart';
-import 'package:lib_bart/settings/settings.dart';
+import 'package:lib_bart/domain/db/modelDB.dart';
+import 'package:lib_bart/domain/entity/book.dart';
+import 'package:lib_bart/domain/entity/bookInCard.dart';
 
 class CardModel extends ChangeNotifier {
-  late Order order;
-  final db = FirebaseFirestore.instance;
+  List<BookInCard> booksInOrder = [];
+  List<Book> booksInfo = [];
 
   void toPrevWindow(BuildContext context) {
     Navigator.pop(context);
   }
 
-  void loadOrder() async {
-    final ref = db.collection('order').doc(AppSettings.id).withConverter(
-      fromFirestore: Order.fromFirestore,
-      toFirestore: (Order order, _) => order.toFirestore(),
-    );
-    final docSnap = await ref.get();
-    final item = docSnap.data();
-    if (item != null) {
-      print(item);
-    } else {
-      print("No such document.");
+  Future<void> loadOrderData() async {
+    booksInOrder = await ModelDB().getBooksInOrder();
+    for(var bookInOrder in booksInOrder) {
+      final book = await ModelDB().getBookInfoInOrderById(bookInOrder.idBook);
+      if (book != null) {
+        booksInfo.add(book);
+      }
     }
   }
 }

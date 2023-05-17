@@ -295,7 +295,57 @@ class ModelDB {
     return id;
   }
 
-  //TODO: getBooksInOrder
-  //TODO: submitOrder
-  //TODO: removeBookFromOrder
+  Future<String?> getIdOrder() async {
+    String? id;
+    await db
+        .collection(ConstDB.TABLE_ORDER)
+        .where(ConstDB.ID_USER, isEqualTo: AppSettings.id)
+        .get()
+        .then(
+      (documentSnapshot) {
+        id = documentSnapshot.docs.first.id;
+        print("Get IdOrder: $id");
+      },
+      onError: (e) => print("Error getting IdOrder: $e"),
+    );
+    return id;
+  }
+
+  Future<List<BookInCard>> getBooksInOrder() async {
+    print('User id: ${AppSettings.id}');
+    String? idOrder = await getIdOrder();
+    if (idOrder == null) return [];
+    List<BookInCard> list = [];
+
+    await db
+        .collection(ConstDB.TABLE_BOOK_IN_ORDER)
+        .withConverter(
+          fromFirestore: BookInCard.fromFirestore,
+          toFirestore: (BookInCard bookInCard, _) => bookInCard.toFirestore(),
+        )
+        .where(ConstDB.ID_ORDER, isEqualTo: idOrder)
+        .get()
+        .then(
+      (documentSnapshot) {
+        list.addAll(documentSnapshot.docs.map((e) => e.data()));
+      },
+      onError: (e) => print("Error getting BookInOrder: $e"),
+    );
+    return list;
+  }
+
+  Future<Book?> getBookInfoInOrderById(String idBook) async {
+    return (await db
+            .collection(ConstDB.TABLE_BOOK)
+            .doc(idBook)
+            .withConverter(
+              fromFirestore: Book.fromFirestore,
+              toFirestore: (Book book, _) => book.toFirestore(),
+            )
+            .get())
+        .data();
+  }
+
+//TODO: submitOrder
+//TODO: removeBookFromOrder
 }

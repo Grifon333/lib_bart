@@ -84,25 +84,52 @@ class _ListBooksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.read<CardModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     return SizedBox(
       height: MediaQuery.of(context).size.height - 357,
-      child: ListView.separated(
-        itemBuilder: (BuildContext context, int index) {
-          return const _BooksInfoWidget();
+      child: FutureBuilder(
+        future: model.loadOrderData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return ListView.separated(
+              itemBuilder: (BuildContext context, int index) {
+                return _BooksInfoWidget(
+                  title: model.booksInfo[index].title,
+                  count: model.booksInOrder[index].count,
+                  price: model.booksInfo[index].price,
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  height: 15,
+                );
+              },
+              itemCount: model.booksInOrder.length,
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         },
-        separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(
-            height: 15,
-          );
-        },
-        itemCount: 1,
       ),
     );
   }
 }
 
 class _BooksInfoWidget extends StatelessWidget {
-  const _BooksInfoWidget({Key? key}) : super(key: key);
+  final String title;
+  final int count;
+  final int price;
+
+  const _BooksInfoWidget({
+    Key? key,
+    required this.title,
+    required this.count,
+    required this.price,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +140,12 @@ class _BooksInfoWidget extends StatelessWidget {
           border: Border.all(color: Colors.black),
           borderRadius: const BorderRadius.all(Radius.circular(8)),
           // gradient: new LinearGradient(
-          //   colors: [Colors.red, Colors.cyan],
+          //   colors: [Colors.red.shade200, Colors.cyan.shade100],
           // ),
           color: MainColors.color5,
         ),
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Row(
             children: [
               const SizedBox(
@@ -134,7 +161,7 @@ class _BooksInfoWidget extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 185,
                     child: Text(
-                      'title',
+                      title,
                       style: const TextStyle(
                         fontSize: 24,
                         color: Colors.black,
@@ -177,7 +204,7 @@ class _BooksInfoWidget extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            '1',
+                            count.toString(),
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.black,
@@ -221,10 +248,10 @@ class _BooksInfoWidget extends StatelessWidget {
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
-                        Text('9.99\$',
-                        style: const TextStyle(
-                          fontSize: 20
-                        ),),
+                        Text(
+                          '$price\$',
+                          style: const TextStyle(fontSize: 20),
+                        ),
                       ],
                     ),
                   )
