@@ -8,6 +8,7 @@ import 'package:lib_bart/domain/entity/user.dart';
 import 'package:lib_bart/domain/entity/order.dart';
 import 'package:lib_bart/settings/settings.dart';
 
+// TODO: Error and Exception handling
 class ModelDB {
   final db = FirebaseFirestore.instance;
   final dbAuth = FirebaseAuth.instance;
@@ -108,7 +109,6 @@ class ModelDB {
     String? fullName,
   }) {
     final ref = db.collection('users').doc(AppSettings.id);
-    print(AppSettings.id);
     final updateData = <String, dynamic>{
       if (nickname != null) ConstDB.NICKNAME: nickname,
       if (email != null) ConstDB.EMAIL: email,
@@ -219,8 +219,8 @@ class ModelDB {
         .where(ConstDB.LANGUAGE, isEqualTo: book.language)
         .where(ConstDB.PRICE, isEqualTo: book.price)
         .get()
-        .then((snapshop) {
-      id = snapshop.docs.first.id;
+        .then((snapshot) {
+      id = snapshot.docs.first.id;
     });
     return id;
   }
@@ -312,11 +312,9 @@ class ModelDB {
   }
 
   Future<List<BookInCard>> getBooksInOrder() async {
-    print('User id: ${AppSettings.id}');
     String? idOrder = await getIdOrder();
     if (idOrder == null) return [];
     List<BookInCard> list = [];
-
     await db
         .collection(ConstDB.TABLE_BOOK_IN_ORDER)
         .withConverter(
@@ -346,6 +344,29 @@ class ModelDB {
         .data();
   }
 
+  Future<String?> getIdBookInOrder(BookInCard bookInOrder) async {
+    String? id;
+    await db
+        .collection(ConstDB.TABLE_BOOK_IN_ORDER)
+        .where(ConstDB.ID_BOOK, isEqualTo: bookInOrder.idBook)
+        .where(ConstDB.ID_ORDER, isEqualTo: bookInOrder.idOrder)
+        .where(ConstDB.COUNT, isEqualTo: bookInOrder.count)
+        .get()
+        .then((documentSnapshot) {
+      id = documentSnapshot.docs.first.id;
+    });
+    return id;
+  }
+
+  Future<void> removeBookInOrder(BookInCard bookInOrder) async {
+    String? idBookInOrder = await getIdBookInOrder(bookInOrder);
+    if (idBookInOrder == null) return;
+    await db
+        .collection(ConstDB.TABLE_BOOK_IN_ORDER)
+        .doc(idBookInOrder)
+        .delete();
+  }
+
 //TODO: submitOrder
-//TODO: removeBookFromOrder
+//TODO: bool isBookInOrder
 }

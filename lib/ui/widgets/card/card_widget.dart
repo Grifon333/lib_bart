@@ -23,11 +23,13 @@ class _BodyWidget extends StatelessWidget {
       child: Column(
         children: const [
           _UpBarWidget(),
-          SizedBox(height: 30),
+          // SizedBox(height: 30),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25),
             child: _ListBooksWidget(),
           ),
+          // Expanded(child: SizedBox()),
+          _BottomMenuWidget(),
         ],
       ),
     );
@@ -84,30 +86,41 @@ class _ListBooksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<CardModel>(context);
+    final model = NotifierProvider.watch<CardModel>(context);
     if (model == null) return const SizedBox.shrink();
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 357,
+      height: MediaQuery.of(context).size.height - 271,
       child: FutureBuilder(
         future: model.loadOrderData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return ListView.separated(
-              itemBuilder: (BuildContext context, int index) {
-                return _BooksInfoWidget(
-                  title: model.booksInfo[index].title,
-                  count: model.booksInOrder[index].count,
-                  price: model.booksInfo[index].price,
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 15,
-                );
-              },
-              itemCount: model.booksInOrder.length,
-            );
+            if (model.booksInOrder.isEmpty) {
+              return const Center(
+                child: Text(
+                  'Empty',
+                  style: TextStyle(fontSize: 48, color: Colors.grey),
+                ),
+              );
+            } else {
+              return ListView.separated(
+                padding: const EdgeInsets.only(top: 30, bottom: 10),
+                itemBuilder: (BuildContext context, int index) {
+                  return _BooksInfoWidget(
+                    title: model.booksInfo[index].title,
+                    count: model.booksInOrder[index].count,
+                    price: model.booksInfo[index].price,
+                    index: index,
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    height: 15,
+                  );
+                },
+                itemCount: model.booksInOrder.length,
+              );
+            }
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -123,16 +136,21 @@ class _BooksInfoWidget extends StatelessWidget {
   final String title;
   final int count;
   final int price;
+  final int index;
 
   const _BooksInfoWidget({
     Key? key,
     required this.title,
     required this.count,
     required this.price,
+    required this.index,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.read<CardModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
     return SizedBox(
       height: 160,
       child: DecoratedBox(
@@ -202,7 +220,7 @@ class _BooksInfoWidget extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             count.toString(),
                             style: const TextStyle(
@@ -232,7 +250,9 @@ class _BooksInfoWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            model.removeBookInOrder(index);
+                          },
                           style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(MainColors.color3),
@@ -260,6 +280,58 @@ class _BooksInfoWidget extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _BottomMenuWidget extends StatelessWidget {
+  const _BottomMenuWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<CardModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 100,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 1,
+            width: MediaQuery.of(context).size.width,
+            child: ColoredBox(color: Colors.black),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total price: ${model.getTotalPrice()}\$',
+                  style: const TextStyle(fontSize: 24),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.orange),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Pay',
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
