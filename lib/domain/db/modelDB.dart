@@ -1,9 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:lib_bart/domain/db/const_db.dart';
 import 'package:lib_bart/domain/entity/book.dart';
+import 'package:lib_bart/domain/entity/bookInCard.dart';
 import 'package:lib_bart/domain/entity/genre.dart';
 import 'package:lib_bart/domain/entity/user.dart';
+import 'package:lib_bart/domain/entity/order.dart';
 import 'package:lib_bart/settings/settings.dart';
 
 class ModelDB {
@@ -199,4 +201,101 @@ class ModelDB {
         .data()!;
     return user;
   }
+
+  Future<String> getBookId(Book book) async {
+    String id = '';
+    await db
+        .collection(ConstDB.TABLE_BOOK)
+        .withConverter(
+          fromFirestore: Book.fromFirestore,
+          toFirestore: (Book book, _) => book.toFirestore(),
+        )
+        .where(ConstDB.TITLE, isEqualTo: book.title)
+        .where(ConstDB.AUTHORS, isEqualTo: book.authors)
+        .where(ConstDB.YEAR_PUBLICATION, isEqualTo: book.yearPublication)
+        .where(ConstDB.PUBLISHER, isEqualTo: book.publisher)
+        .where(ConstDB.COUNT_PAGE, isEqualTo: book.countPage)
+        .where(ConstDB.TYPE_OF_BINDING, isEqualTo: book.typeOfBinding)
+        .where(ConstDB.LANGUAGE, isEqualTo: book.language)
+        .where(ConstDB.PRICE, isEqualTo: book.price)
+        .get()
+        .then((snapshop) {
+      id = snapshop.docs.first.id;
+    });
+    return id;
+  }
+
+  Future<void> addBookToCard(Book book) async {
+    String idBook = await getBookId(book);
+    String? idOrder = await orderExist();
+    idOrder ??= await createOrder();
+    BookInCard bookInCard =
+        BookInCard(idBook: idBook, idOrder: idOrder, count: 1);
+    await db
+        .collection(ConstDB.TABLE_BOOK_IN_ORDER)
+        .withConverter(
+          fromFirestore: BookInCard.fromFirestore,
+          toFirestore: (BookInCard bookInCard, _) => bookInCard.toFirestore(),
+        )
+        .add(bookInCard)
+        .then(
+      (documentSnapshot) {
+        print("Added Book in BookInCard with ID: ${documentSnapshot.id}");
+      },
+      onError: (e) => print("Error writing document: $e"),
+    );
+  }
+
+  Future<String?> orderExist() async {
+    String? id;
+    await db
+        .collection(ConstDB.TABLE_ORDER)
+        // .withConverter(
+        //   fromFirestore: Order.fromFirestore,
+        //   toFirestore: (Order order, _) => order.toFirestore(),
+        // )
+        .where(ConstDB.ID_USER, isEqualTo: AppSettings.id)
+        .where(ConstDB.STATUS, isEqualTo: 'Created')
+        .get()
+        .then(
+      (documentSnapshot) {
+        if (documentSnapshot.docs.isNotEmpty) {
+          id = documentSnapshot.docs.first.id;
+          return;
+        }
+      },
+      onError: (e) => print("Error getting document of Order: $e"),
+    );
+    return id;
+  }
+
+  Future<String> createOrder() async {
+    Order order = Order(
+      idUser: AppSettings.id,
+      address: '',
+      dateRegistration: '',
+      status: 'Created',
+      idCourier: '',
+    );
+    String id = '';
+    await db
+        .collection(ConstDB.TABLE_ORDER)
+        .withConverter(
+          fromFirestore: Order.fromFirestore,
+          toFirestore: (Order order, _) => order.toFirestore(),
+        )
+        .add(order)
+        .then(
+      (documentSnapshot) {
+        id = documentSnapshot.id;
+        print("Added Order with ID: $id");
+      },
+      onError: (e) => print("Error writing document of Order: $e"),
+    );
+    return id;
+  }
+
+  //TODO: getBooksInOrder
+  //TODO: submitOrder
+  //TODO: removeBookFromOrder
 }

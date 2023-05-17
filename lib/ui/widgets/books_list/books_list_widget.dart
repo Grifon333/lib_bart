@@ -19,16 +19,8 @@ class BooksListWidget extends StatelessWidget {
 class _BodyWidget extends StatelessWidget {
   const _BodyWidget({Key? key}) : super(key: key);
 
-  // void init(BooksListModel model) {
-  //   model.read();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // final model = NotifierProvider.watch<BooksListModel>(context);
-    // if (model == null) return const SizedBox.shrink();
-    // model.read();
-
     return ColoredBox(
       color: MainColors.color1,
       child: SafeArea(
@@ -177,7 +169,7 @@ class _BooksListWidget extends StatelessWidget {
                 return _BookInfoWidget(
                   book: book,
                   genres: genres,
-                  // index: index,
+                  index: index,
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -205,20 +197,25 @@ class _BooksListWidget extends StatelessWidget {
 class _BookInfoWidget extends StatelessWidget {
   final Book book;
   final List<Genre> genres;
-
-  // final int index;
+  final int index;
 
   const _BookInfoWidget({
     Key? key,
     required this.book,
     required this.genres,
-    // required this.index,
+    required this.index,
   }) : super(key: key);
+
+  Future<void> onPresed(BooksListModel model) async {
+    if (model.selectedBooks[index]) return;
+    print('Add book to card ${book.title}');
+    await model.addBookInCard(index);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final model = NotifierProvider.read<BooksListModel>(context);
-    // if (model == null) return const SizedBox.shrink();
+    final model = NotifierProvider.read<BooksListModel>(context);
+    if (model == null) return const SizedBox.shrink();
 
     return SizedBox(
       height: 320,
@@ -333,10 +330,7 @@ class _BookInfoWidget extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 245,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          print('Add book to card ${book.title}');
-                          // await model.addBookInCard(book.id);
-                        },
+                        onPressed: () => onPresed(model),
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(
                             const EdgeInsets.symmetric(
@@ -347,6 +341,9 @@ class _BookInfoWidget extends StatelessWidget {
                           backgroundColor: MaterialStateProperty.all(
                             MainColors.color4,
                           ),
+                          // overlayColor: MaterialStateProperty.all(
+                          //   Colors.greenAccent,
+                          // ),
                           side: MaterialStateProperty.all(
                             const BorderSide(color: Colors.black),
                           ),

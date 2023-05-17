@@ -7,6 +7,7 @@ import 'package:lib_bart/ui/navigation/main_navigation.dart';
 class BooksListModel extends ChangeNotifier {
   List<Book> books = [];
   List<List<Genre>> genres = [];
+  late List<bool> selectedBooks;
 
   Future<void> getData() async {
     // Book book = const Book(
@@ -34,6 +35,7 @@ class BooksListModel extends ChangeNotifier {
       List<Genre> genresList = await ModelDB().getGenres(book.listGenresId);
       genres.add(genresList);
     }
+    selectedBooks = List.filled(books.length, false);
     notifyListeners();
   }
 
@@ -41,44 +43,10 @@ class BooksListModel extends ChangeNotifier {
     Navigator.of(context).pushNamed(MainNavigationNameRoute.card);
   }
 
-  Future<void> addBookInCard(String id) async {
-    // final bookInCard = <String, dynamic>{
-    //   ConstDB.ID_BOOK: id,
-    //   ConstDB.COUNT: 1,
-    // };
-    // await db.collection(ConstDB.TABLE_BOOK_IN_ORDER).add(bookInCard);
-    //
-    // final ref = await db
-    //     .collection(ConstDB.TABLE_ORDER)
-    //     .where(ConstDB.ID_USER, isEqualTo: AppSettings.id)
-    //     .get();
-    // if (ref.size == 0) {
-    //   final item = <String, dynamic>{
-    //     ConstDB.ID_USER: AppSettings.id,
-    //     // ConstDB.ID_BOOKS_IN_ORDER: [id],
-    //     ConstDB.ADDRESS: null,
-    //     ConstDB.DATE_REGISTRATION: null,
-    //     ConstDB.STATUS: 'In process'
-    //   };
-    //   await db.collection(ConstDB.TABLE_ORDER).add(item);
-    // } else {
-    //   final ord = await db
-    //       .collection(ConstDB.TABLE_ORDER)
-    //       .where('idUser', isEqualTo: AppSettings.id)
-    //       .get();
-    //   final map = (await db
-    //           .collection(ConstDB.TABLE_ORDER)
-    //           .doc(ord.docs.first.id)
-    //           .get())
-    //       .data();
-    //   List<String> list = (map?['idBooksInOrder'] as List<dynamic>)
-    //       .map((e) => e.toString())
-    //       .toList();
-    //   list.add(id);
-    //   list = list.toSet().toList();
-    //   db.collection(ConstDB.TABLE_ORDER).doc(ord.docs.first.id).update({
-    //     'idBooksInOrder': list,
-    //   });
-    // }
+  Future<void> addBookInCard(int index) async {
+    await ModelDB().addBookToCard(books[index]);
+    selectedBooks[index] = true;
+    print(selectedBooks);
+    notifyListeners();
   }
 }

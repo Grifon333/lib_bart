@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lib_bart/domain/db/const_db.dart';
 
+//TODO: Status: Created, InProcess, Completed
 class Order {
   final String idUser;
   final String? address;
