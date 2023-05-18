@@ -101,13 +101,13 @@ class ModelDB {
     }
   }
 
-  void updateUser({
+  Future<void> updateUser({
     String? nickname,
     String? email,
     String? password,
     String? number,
     String? fullName,
-  }) {
+  }) async {
     final ref = db.collection('users').doc(AppSettings.id);
     final updateData = <String, dynamic>{
       if (nickname != null) ConstDB.NICKNAME: nickname,
@@ -116,7 +116,7 @@ class ModelDB {
       if (number != null) ConstDB.NUMBER: number,
       if (fullName != null) ConstDB.FULL_NAME: fullName,
     };
-    ref.update(updateData).then(
+    await ref.update(updateData).then(
           (value) => print("DocumentSnapshot successfully updated!"),
           onError: (e) => print("Error updating document $e"),
         );

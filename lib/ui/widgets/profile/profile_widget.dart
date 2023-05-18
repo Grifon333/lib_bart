@@ -19,7 +19,7 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<ProfileModel>(context);
+    final model = NotifierProvider.watch<ProfileModel>(context);
     if (model == null) return const SizedBox.shrink();
 
     return SafeArea(
@@ -59,20 +59,24 @@ class _BodyWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _OptionProfileWidget(
-                                title:
-                                    'Full name: ${model.user.fullName ?? 'none'}',
+                                title: 'Full name: ',
+                                body: model.user.fullName ?? 'none',
                               ),
                               _OptionProfileWidget(
-                                title: 'Number: ${model.user.number ?? 'none'}',
+                                title: 'Number: ',
+                                body: model.user.number ?? 'none',
                               ),
                               _OptionProfileWidget(
-                                title: 'Nickname: ${model.user.nickname}',
+                                title: 'Nickname: ',
+                                body: model.user.nickname ?? 'none',
                               ),
                               _OptionProfileWidget(
-                                title: 'Password: ${model.user.password}',
+                                title: 'Password: ',
+                                body: model.user.password,
                               ),
                               _OptionProfileWidget(
-                                title: 'Email: ${model.user.email}',
+                                title: 'Email: ',
+                                body: model.user.email,
                               ),
                             ],
                           );
@@ -83,13 +87,15 @@ class _BodyWidget extends StatelessWidget {
                         }
                       },
                     ),
-                    const _ButtonWidget(
+                    _ButtonWidget(
                       title: 'Change',
                       color: MainColors.color4,
+                      onPressed: () => model.change(),
                     ),
-                    const _ButtonWidget(
+                    _ButtonWidget(
                       title: 'Log out',
                       color: MainColors.color3,
+                      onPressed: () => model.logout(context),
                     ),
                   ],
                 ),
@@ -133,19 +139,57 @@ class _UpBarWidget extends StatelessWidget {
 
 class _OptionProfileWidget extends StatelessWidget {
   final String title;
+  final String body;
 
   const _OptionProfileWidget({
     Key? key,
     required this.title,
+    required this.body,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final model = NotifierProvider.watch<ProfileModel>(context);
+    if (model == null) return const SizedBox.shrink();
+    bool isChange = model.isChange;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 24),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 24),
+          ),
+          isChange
+              ? SizedBox(
+                  height: 50,
+                  width: 204,
+                  child: TextField(
+                    controller: TextEditingController(text: body),
+                    style: const TextStyle(fontSize: 24),
+                    decoration: InputDecoration(
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      isCollapsed: true,
+                      contentPadding: const EdgeInsets.all(4),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: title,
+                      hintStyle: const TextStyle(
+                        color: Color.fromRGBO(200, 200, 200, 1),
+                      ),
+                    ),
+                    onSubmitted: (updateBody) =>
+                        model.onChangeField(title, updateBody),
+                  ),
+                )
+              : Text(
+                  body,
+                  style: const TextStyle(fontSize: 24),
+                ),
+        ],
       ),
     );
   }
@@ -154,11 +198,13 @@ class _OptionProfileWidget extends StatelessWidget {
 class _ButtonWidget extends StatelessWidget {
   final String title;
   final Color color;
+  final VoidCallback? onPressed;
 
   const _ButtonWidget({
     Key? key,
     required this.title,
     required this.color,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -166,7 +212,7 @@ class _ButtonWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ButtonStyle(
           padding: MaterialStateProperty.all(
             const EdgeInsets.symmetric(vertical: 11),

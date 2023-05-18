@@ -11,27 +11,27 @@ class BooksListModel extends ChangeNotifier {
 
   Future<void> getData() async {
     // Book book = const Book(
-    //   title: 'title2',
-    //   authors: 'authors2',
-    //   yearPublication: 2022,
-    //   publisher: 'publisher2',
-    //   countPage: 350,
+    //   title: '',
+    //   authors: '',
+    //   yearPublication: ,
+    //   publisher: '',
+    //   countPage: ,
     //   listGenresId: [
-    //     'Ju17KxZU145nFegOMC6q',
-    //     'Ozpe3C0U6Euu4WhqBPGw',
+    //     '',
     //   ],
-    //   typeOfBinding: 'Soft',
-    //   language: 'UA',
-    //   description: 'History of ...',
-    //   idVendor: '2',
-    //   price: 12,
-    //   count: 1,
+    //   typeOfBinding: '',
+    //   language: '',
+    //   description:
+    //       '',
+    //   idVendor: '',
+    //   price: ,
+    //   count: ,
     // );
     // await ModelDB().addBook(book);
 
     books = await ModelDB().getAllBooks();
     genres = [];
-    for(var book in books) {
+    for (var book in books) {
       List<Genre> genresList = await ModelDB().getGenres(book.listGenresId);
       genres.add(genresList);
     }

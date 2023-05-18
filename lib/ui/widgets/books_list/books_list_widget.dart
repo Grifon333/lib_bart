@@ -27,13 +27,12 @@ class _BodyWidget extends StatelessWidget {
         child: Column(
           children: [
             const _UpBarWidget(),
-            const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Column(
                 children: const [
-                  _SearchAndOptionsWidget(),
-                  SizedBox(height: 30),
+                  // _SearchAndOptionsWidget(),
+                  // SizedBox(height: 30),
                   _BooksListWidget(),
                 ],
               ),
@@ -157,12 +156,13 @@ class _BooksListWidget extends StatelessWidget {
     if (model == null) return const SizedBox.shrink();
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 357,
+      height: MediaQuery.of(context).size.height - 242, //357
       child: FutureBuilder(
         future: model.getData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 15),
               itemBuilder: (BuildContext context, int index) {
                 final book = model.books[index];
                 final genres = model.genres[index];
@@ -245,11 +245,11 @@ class _BookInfoWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _ElementOptionsBookWidget(
-                            icon: Icons.circle,
+                            icon: Icons.language,
                             text: book.language,
                           ),
                           _ElementOptionsBookWidget(
-                            icon: Icons.grade,
+                            icon: Icons.create_outlined,
                             text: book.yearPublication.toString(),
                           ),
                         ],
@@ -262,11 +262,11 @@ class _BookInfoWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _ElementOptionsBookWidget(
-                            icon: Icons.bookmark,
+                            icon: Icons.bookmark_border,
                             text: book.countPage.toString(),
                           ),
                           _ElementOptionsBookWidget(
-                            icon: Icons.book,
+                            icon: Icons.book_outlined,
                             text: book.typeOfBinding,
                           ),
                         ],
@@ -283,10 +283,28 @@ class _BookInfoWidget extends StatelessWidget {
                       child: Text(
                         book.title,
                         style: const TextStyle(
-                          fontSize: 28,
-                          color: Colors.white,
+                          fontSize: 24,
+                          color: Colors.black,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(-1, -1),
+                              color: Colors.white,
+                            ),
+                            Shadow(
+                              offset: Offset(1, -1),
+                              color: Colors.white,
+                            ),
+                            Shadow(
+                              offset: Offset(1, 1),
+                              color: Colors.white,
+                            ),
+                            Shadow(
+                              offset: Offset(-1, 1),
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -297,17 +315,17 @@ class _BookInfoWidget extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 245,
-                      child: const _StarsWidget(),
-                    ),
+                    // SizedBox(
+                    //   width: MediaQuery.of(context).size.width - 245,
+                    //   child: const _StarsWidget(),
+                    // ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 245,
                       child: Text(
                         genres.map((e) => e.title).toList().toString(),
                         style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
+                          fontSize: 16,
+                          color: Colors.grey,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -319,10 +337,10 @@ class _BookInfoWidget extends StatelessWidget {
                       child: Text(
                         book.description,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 14,
                           color: Colors.white,
                         ),
-                        maxLines: 3,
+                        maxLines: 7,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
