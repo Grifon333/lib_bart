@@ -49,6 +49,36 @@ class ModelDB {
     AppSettings.id = userId;
   }
 
+  Future<void> getUserByLoginAndPassword(String login, String password) async {
+    List users = (await db
+            .collection('users')
+            .withConverter(
+              fromFirestore: User.fromFirestore,
+              toFirestore: (User user, _) => user.toFirestore(),
+            )
+            .where(ConstDB.NICKNAME, isEqualTo: email)
+            .get())
+        .docs;
+    if (users.isEmpty) {
+      throw Exception('Not found user');
+    }
+    users = (await db
+            .collection('users')
+            .withConverter(
+              fromFirestore: User.fromFirestore,
+              toFirestore: (User user, _) => user.toFirestore(),
+            )
+            .where(ConstDB.NICKNAME, isEqualTo: login)
+            .where(ConstDB.PASSWORD, isEqualTo: password)
+            .get())
+        .docs;
+    if (users.isEmpty) {
+      throw Exception('Password invalid');
+    }
+    String userId = users.first.id;
+    AppSettings.id = userId;
+  }
+
   Future<void> registerWithEmailAndPassword(
     String email,
     String password,

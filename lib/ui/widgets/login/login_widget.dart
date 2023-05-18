@@ -10,9 +10,6 @@ class LoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final model = NotifierProvider.watch<LoginModel>(context);
-    // if (model == null) return const SizedBox.shrink();
-
     return const Scaffold(
       body: _BodyWidget(),
     );
@@ -48,12 +45,36 @@ class _BodyWidget extends StatelessWidget {
               ),
               const SizedBox(height: 48),
               MainTextField().tf1(
-                hintText: 'Password',
-                onChange: (value) => model.password = value,
-              ),
+                  hintText: 'Password',
+                  onChange: (value) => model.password = value,
+                  obscureText: true),
               const SizedBox(height: 80),
               MainButton().elevatedButton(
-                onPressed: () => model.loginCustomer(context),
+                onPressed: () async {
+                  try {
+                    await model.loginCustomer(context);
+                  } on Exception catch (e) {
+                    String errorMsg = e.toString().substring(11);
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Warning'),
+                        content: Text(errorMsg),
+                        actions: <Widget>[
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('Ok'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
                 color: MainColors.color4,
                 title: 'Log in',
               ),

@@ -4,6 +4,7 @@ class MainTextField {
   Widget tf1({
     required String hintText,
     Function(String)? onChange,
+    bool? obscureText,
   }) {
     return TextField(
       style: const TextStyle(fontSize: 30),
@@ -19,6 +20,7 @@ class MainTextField {
         hintStyle: const TextStyle(color: Color.fromRGBO(200, 200, 200, 1)),
       ),
       onChanged: onChange,
+      obscureText: obscureText ?? false,
     );
   }
 }
