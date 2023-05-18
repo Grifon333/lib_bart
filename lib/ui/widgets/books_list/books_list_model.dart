@@ -8,6 +8,7 @@ class BooksListModel extends ChangeNotifier {
   List<Book> books = [];
   List<List<Genre>> genres = [];
   late List<bool> selectedBooks;
+  String filterTitle = '';
 
   Future<void> getData() async {
     // Book book = const Book(
@@ -21,22 +22,27 @@ class BooksListModel extends ChangeNotifier {
     //   ],
     //   typeOfBinding: '',
     //   language: '',
-    //   description:
-    //       '',
+    //   description: '',
     //   idVendor: '',
     //   price: ,
     //   count: ,
     // );
     // await ModelDB().addBook(book);
 
-    books = await ModelDB().getAllBooks();
+    int oldCountBooks = books.length;
+    books = (await ModelDB().getAllBooks())
+        .where((element) =>
+            element.title.toLowerCase().contains(filterTitle.toLowerCase()))
+        .toList();
     genres = [];
     for (var book in books) {
       List<Genre> genresList = await ModelDB().getGenres(book.listGenresId);
       genres.add(genresList);
     }
     selectedBooks = List.filled(books.length, false);
-    notifyListeners();
+    if (books.length != oldCountBooks) {
+      notifyListeners();
+    }
   }
 
   void toCard(BuildContext context) {
@@ -46,6 +52,12 @@ class BooksListModel extends ChangeNotifier {
   Future<void> addBookInCard(int index) async {
     await ModelDB().addBookToCard(books[index]);
     selectedBooks[index] = true;
+    notifyListeners();
+  }
+
+  void setTitleFilter(String filter) {
+    if (filter == filterTitle) return;
+    filterTitle = filter;
     notifyListeners();
   }
 }

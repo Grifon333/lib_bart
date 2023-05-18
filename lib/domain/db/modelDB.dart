@@ -56,7 +56,7 @@ class ModelDB {
               fromFirestore: User.fromFirestore,
               toFirestore: (User user, _) => user.toFirestore(),
             )
-            .where(ConstDB.NICKNAME, isEqualTo: email)
+            .where(ConstDB.NICKNAME, isEqualTo: login)
             .get())
         .docs;
     if (users.isEmpty) {

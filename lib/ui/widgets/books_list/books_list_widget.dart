@@ -31,8 +31,7 @@ class _BodyWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Column(
                 children: const [
-                  // _SearchAndOptionsWidget(),
-                  // SizedBox(height: 30),
+                  _SearchAndOptionsWidget(),
                   _BooksListWidget(),
                 ],
               ),
@@ -91,58 +90,64 @@ class _UpBarWidget extends StatelessWidget {
   }
 }
 
-//TODO: remove left options
 class _SearchAndOptionsWidget extends StatelessWidget {
   const _SearchAndOptionsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          height: 70,
-          width: 70,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: MainColors.color4,
-              borderRadius: const BorderRadius.all(Radius.circular(6)),
-              border: Border.all(color: Colors.black),
-            ),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.white,
-                size: 50,
+    final model = NotifierProvider.read<BooksListModel>(context);
+    if (model == null) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: MainColors.color4,
+                borderRadius: const BorderRadius.all(Radius.circular(6)),
+                border: Border.all(color: Colors.black),
+              ),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                  size: 50,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 10),
-        SizedBox(
-          // height: 70,
-          width: MediaQuery.of(context).size.width - 130,
-          child: const TextField(
-            decoration: InputDecoration(
-                hintText: 'Search...',
-                suffixIcon: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(
-                    Icons.search,
-                    size: 50,
-                    color: Colors.black,
+          const SizedBox(width: 10),
+          SizedBox(
+            height: 70,
+            width: MediaQuery.of(context).size.width - 130,
+            child: TextField(
+              decoration: const InputDecoration(
+                  hintText: 'Search...',
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(
+                      Icons.search,
+                      size: 50,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
-                filled: true,
-                fillColor: Colors.white),
-            style: TextStyle(fontSize: 24),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  filled: true,
+                  fillColor: Colors.white),
+              style: const TextStyle(fontSize: 24),
+              onChanged: (val) => model.setTitleFilter(val),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -152,11 +157,11 @@ class _BooksListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<BooksListModel>(context);
+    final model = NotifierProvider.watch<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height - 242, //357
+      height: MediaQuery.of(context).size.height - 332, //357
       child: FutureBuilder(
         future: model.getData(),
         builder: (context, snapshot) {
@@ -236,7 +241,7 @@ class _BookInfoWidget extends StatelessWidget {
                     const SizedBox(
                       height: 230,
                       width: 160,
-                      child: ColoredBox(color: Colors.black),
+                      child: ColoredBox(color: Colors.black87),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -304,7 +309,7 @@ class _BookInfoWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
