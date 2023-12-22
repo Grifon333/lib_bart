@@ -1,4 +1,6 @@
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
+import 'package:lib_bart/ui/widgets/books_list/add_book/add_book_model.dart';
+import 'package:lib_bart/ui/widgets/books_list/add_book/add_book_widget.dart';
 import 'package:lib_bart/ui/widgets/bottom_navigation/bottom_navigation_model.dart';
 import 'package:lib_bart/ui/widgets/bottom_navigation/bottom_navigation_widget.dart';
 import 'package:lib_bart/ui/widgets/card/card_model.dart';
@@ -18,6 +20,7 @@ class MainNavigationNameRoute {
   static const registerSecond = '/register/second';
   static const bottomNavigation = '/bottomNavigation';
   static const card = '/bottomNavigation/card';
+  static const addBook = '/bottomNavigation/addBook';
 }
 
 class MainNavigation {
@@ -42,6 +45,10 @@ class MainNavigation {
     MainNavigationNameRoute.card: (context) => NotifierProvider(
           child: const CardWidget(),
           create: () => CardModel(),
+        ),
+    MainNavigationNameRoute.addBook: (context) => NotifierProvider(
+          child: const AddBookWidget(),
+          create: () => AddBookModel(),
         ),
   };
 

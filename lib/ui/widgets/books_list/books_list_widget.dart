@@ -3,6 +3,7 @@ import 'package:lib_bart/assets/color/main_colors.dart';
 import 'package:lib_bart/domain/entity/book.dart';
 import 'package:lib_bart/domain/entity/genre.dart';
 import 'package:lib_bart/library/widgets/inherited/provider.dart';
+import 'package:lib_bart/ui/navigation/main_navigation.dart';
 import 'package:lib_bart/ui/widgets/books_list/books_list_model.dart';
 
 class BooksListWidget extends StatelessWidget {
@@ -95,36 +96,45 @@ class _SearchAndOptionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = NotifierProvider.read<BooksListModel>(context);
+    final model = NotifierProvider.watch<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
+    bool showMenu = model.isAdminOrManager;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
+          showMenu
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: SizedBox(
+                    height: 70,
+                    width: 70,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: MainColors.color4,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(6)),
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(MainNavigationNameRoute.addBook);
+                        },
+                        icon: const Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 50,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
           SizedBox(
             height: 70,
-            width: 70,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: MainColors.color4,
-                borderRadius: const BorderRadius.all(Radius.circular(6)),
-                border: Border.all(color: Colors.black),
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                  size: 50,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          SizedBox(
-            height: 70,
-            width: MediaQuery.of(context).size.width - 130,
+            width: MediaQuery.of(context).size.width - (showMenu ? 130 : 50),
             child: TextField(
               decoration: const InputDecoration(
                   hintText: 'Search...',
@@ -160,40 +170,45 @@ class _BooksListWidget extends StatelessWidget {
     final model = NotifierProvider.watch<BooksListModel>(context);
     if (model == null) return const SizedBox.shrink();
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - 332, //357
-      child: FutureBuilder(
-        future: model.getData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              itemBuilder: (BuildContext context, int index) {
-                final book = model.books[index];
-                final genres = model.genres[index];
-                return _BookInfoWidget(
-                  book: book,
-                  genres: genres,
-                  index: index,
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 20,
-                );
-              },
-              itemCount: model.books.length,
-            );
-          } else {
-            return const Center(
-              child: SizedBox(
-                height: 100,
-                width: 100,
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        },
+    return RefreshIndicator(
+      onRefresh: () async {
+        await model.getData();
+      },
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height - 332, //357
+        child: FutureBuilder(
+          future: model.getData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                itemBuilder: (BuildContext context, int index) {
+                  final book = model.books[index];
+                  final genres = model.genres[index];
+                  return _BookInfoWidget(
+                    book: book,
+                    genres: genres,
+                    index: index,
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    height: 20,
+                  );
+                },
+                itemCount: model.books.length,
+              );
+            } else {
+              return const Center(
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -410,39 +425,6 @@ class _ElementOptionsBookWidget extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(fontSize: 16),
-        ),
-      ],
-    );
-  }
-}
-
-class _StarsWidget extends StatelessWidget {
-  const _StarsWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
-        Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        Icon(
-          Icons.star_border,
-          color: Colors.amber,
         ),
       ],
     );

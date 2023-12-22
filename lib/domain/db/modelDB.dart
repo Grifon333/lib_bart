@@ -153,7 +153,7 @@ class ModelDB {
   }
 
   Future<void> addBook(Book book) async {
-    db
+    await db
         .collection(ConstDB.TABLE_BOOK)
         .withConverter(
           fromFirestore: Book.fromFirestore,
@@ -395,6 +395,56 @@ class ModelDB {
         .collection(ConstDB.TABLE_BOOK_IN_ORDER)
         .doc(idBookInOrder)
         .delete();
+  }
+
+  Future<String?> getIdGenre(String genre) async {
+    String? id;
+    await db
+        .collection(ConstDB.TABLE_GENRE)
+        .withConverter(
+          fromFirestore: Genre.fromFirestore,
+          toFirestore: (Genre genre, _) => genre.toFirestore(),
+        )
+        .where(ConstDB.TITLE, isEqualTo: genre)
+        .get()
+        .then(
+      (documentSnapshot) {
+        if (documentSnapshot.size > 0) {
+          id = documentSnapshot.docs.first.id;
+        }
+      },
+    );
+    return id;
+  }
+
+  Future<String> addGenre(Genre genre) async {
+    String id = '';
+    await db
+        .collection(ConstDB.TABLE_GENRE)
+        .withConverter(
+          fromFirestore: Genre.fromFirestore,
+          toFirestore: (Genre genre, _) => genre.toFirestore(),
+        )
+        .add(genre)
+        .then((documentSnapshot) {
+      id = documentSnapshot.id;
+    });
+    return id;
+  }
+
+  Future<String> getUserLoginById(String id) async {
+    String login = '';
+    await db
+        .collection('users')
+        .doc(id)
+        .withConverter(
+            fromFirestore: User.fromFirestore,
+            toFirestore: (User user, _) => user.toFirestore())
+        .get()
+        .then((documentSnapshot) {
+      login = documentSnapshot.data()?.nickname ?? '';
+    });
+    return login;
   }
 
 //TODO: submitOrder

@@ -11,10 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dcdg: ^4.1.0
 
   firebase_core: ^2.4.0
   firebase_auth: ^4.2.1
-  cloud_firestore: ^4.2.0
+  cloud_firestore: ^4.13.6
 
   cupertino_icons: ^1.0.2
 
@@ -23,6 +24,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+#  dart_code_metrics: ^5.7.6
 
 
 flutter:

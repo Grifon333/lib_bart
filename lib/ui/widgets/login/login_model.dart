@@ -26,6 +26,8 @@ class LoginModel extends ChangeNotifier {
     }
     if (_login == 'manager') {
       AppSettings.role = 'manager';
+    } else {
+      AppSettings.role = 'user';
     }
     // if (_login == 'admin' && _password != '123') {
     //   throw Exception('Invalid password for admin');
